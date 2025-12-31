@@ -17,13 +17,15 @@ projects:
     
   - id: 1
     title: "Digital Electronics Final Project"
-    description: "A final project for digital electronics course"
-    technologies: ["digital electronics", "verilog", "fpga"]
-    status: "not-started"
+    description: "FPGA-based servo motor control with VGA visualization using Verilog on Cyclone IV"
+    technologies: ["digital electronics", "verilog", "fpga", "VGA", "servo motor", "Quartus"]
+    status: "completed"
     priority: "high"
     date_added: "2025-12-31"
+    date_completed: "2025-12-31"
     github_url: "https://github.com/unal-edigital1-lab/entrega-final-2021grupo03"
-    notes: "UNAL Digital 1 Lab - Entrega Final 2021 Grupo03"
+    md_file: "_projects/digital-electronics-fpga-servo-vga.md"
+    notes: "UNAL Digital 1 Lab - Project documented with Verilog code snippets. Images needed from repository: CycloneIV.jpeg, USBBlaster.jpeg, servo.jpg, monitoring displays"
     
   - id: 2
     title: "Diseño Mecatronico"

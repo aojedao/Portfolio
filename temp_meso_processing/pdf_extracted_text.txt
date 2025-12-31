@@ -1,0 +1,197 @@
+
+
+--- PAGE 1 ---
+
+UNIVERSIDAD NACIONAL DE COLOMBIA, DEPARTAMENTO DE INGENIER ´IA MEC ´ANICA Y MECATR ´ONICA. 1
+Modelaci ´on de microcorte por SPH
+en LS-DYNA
+Alejandro Ojeda Olarte,
+aojedao@unal.edu.co
+Index Terms —SPH,Model,Cutting,Simulation,
+Johnson-Cook,Titanium.
+I. I NTRODUCCI ´ON
+LA industria moderna, requiere muy buenos
+procesos de manufactura para la obtenci ´on
+de productos de aplicaciones espec ´ıﬁcas especiales.
+Las limitaciones del tama ˜no en la fabricaci ´on cada
+vez representan un problema de menor impacto, y
+as´ı lograr componentes a menor escala.
+Consecuentemente se hace necesario el control
+de los par ´ametros que rigen estos procesos, de
+manera que se pueda predecir el comportamiento
+del material base.
+En este documento, se estudia un microcorte con
+un monoﬁlo en una aleaci ´on de titanio Ti6Al4V
+El desarrollo de este proyecto se enmarca en
+el proceso de formaci ´on academica en el ´area de
+investigaci ´on del micromaquinado y parte de la
+utilizaci ´on de un modelo referenciado por Mark J
+Jackson.
+II. J USTIFICACI ´ON
+Los sistemas modernos de producci ´on de pro-
+ductos a escala micro, pueden ser optimizados si se
+estudia el procedimiento del maquinado. Un mode-
+lo que simule comportamiento f ´ısico del proceso lo
+lograr ´ıa.
+III. O BJETIVOS
+III-A. General
+Simular el proceso de remoci ´on de material con
+un monoﬁlo de en el titanio Ti-6Al-4V
+III-B. Espec ´ıﬁcos
+Familiarizarse con el software LS-DYNA para
+simulaci ´on de corte.
+Recolectar los datos de la aleaci ´on de tita-
+nio Ti-6AL-4V por medio de la revisi ´on de
+documentos acad ´emicos seg ´un los par ´ametros
+requeridos por el programa.
+Modelar el proceso de corte en el material en
+referencia.
+Modelar el proceso de microcorte ortogonal
+en contra sentido con un monoﬁlo.IV. M ETODOLOG ´IA
+Como proyecto a desarrollar se plantea modelar
+el material como un grupo de nodos por SPH, con
+la herramienta como elemento s ´olido.
+IV-A. Revisi ´on del estado del arte
+Como primer paso, se reviso la bibliograf ´ıa,
+puntualmente Mark J. Jackson [ ?], que propone
+modelar el proceso del micromaquinado por SPH
+(Smoothed Particle Hydrodynamics), dado que este
+m´etodo computacional se recomienda para elemen-
+tos continuos, como s ´olidos o l ´ıquidos. Tambi ´en se
+presenta por Davim [ ?]. Y por ´ultimo se hace una
+revisi ´on del documento de Cai [7].
+IV-B. Adquisici ´on del Software
+El software se compone a dos partes, el
+procesamiento y la interfaz gr ´aﬁca que permite
+ingresar los datos es LS-PrePost, mientras que
+el que realiza los c ´alculos para poder observar
+el maquinado el LS-DYNA. Para la licencia
+primero se debe pedir una licencia al correo
+que aparece en la p ´agina, posterior a esto lo
+redirigen al distribuidor local de licencias. En
+este caso espec ´ıﬁco el distribuidor local esta en
+Brasil, el correo que deb ´ıa enviar a licencia no
+exist´ıa por ende se demor ´o mas en llegar la licencia.
+Figura 1. Correos que se enviaron en el proceso de conseguir
+la licencia del software.
+
+--- PAGE 2 ---
+
+2 UNIVERSIDAD NACIONAL DE COLOMBIA, DEPARTAMENTO DE INGENIER ´IA MEC ´ANICA Y MECATR ´ONICA.
+Figura 2.
+Figura 3.
+IV-C. Modelo Inicial del Software
+Agregar el diagrama de proceso Posterior a
+la adquisici ´on del programa se procedi ´o a realizar
+una simulaci ´on basada en un modelo realizado por
+la empresa LS quien produce la aplicaci ´on usada
+en el proyecto. Aqu ´ı se lleva a cabo el proceso
+completo del ingreso de los datos m ´ınimos para
+simular un corte en LS-PrePost. Se genera primero
+la geometr ´ıa de los elementos, el material y la
+herramienta. A continuaci ´on se ingresan los datos
+requeridos por el modelo Johnson-Cook, luego sus
+caracter ´ısticas t ´ermicas.
+Figura 4. En la imagen se ve el ambiente de la ´ultima parte
+de la modelaci ´on. En la parte derecha se observan los datos
+ingresados.
+Posterior a tener todos los par ´ametros ingresados
+y correlacionados, se lleva el archivo a LS-DYNA
+donde se calcular ´a el comportamiento del material.
+Figura 5. Diagrama de datos del material.
+
+--- PAGE 3 ---
+
+OJEDA. MESOMICROMAQUINADO-MULTIEJE-ROBOTIZADO-CNC 3
+Figura 6. Ejecuci ´on del programa LS-DYNA. Se observa el
+tiempo de ejecuci ´on en .estimated total cpu time.enla parte
+inferior.
+En el proceso de la ejecuci ´on de esta fase, la
+primer vez arroj ´o un tiempo estimado de 34 horas,
+las segunda instancia que se corri ´o 28 horas, la
+tercera 22 y la ´ultima instancia, en la cual se tom ´o
+el modelo, fue de 6 horas.
+Despu ´es se carga el archivo generado por LS-
+DYNA, un d3plot, en LS-PrePost el cual arroja la
+simulaci ´on completa.
+Figura 7. Ejecuci ´on de la modelaci ´on en LS-PrePost. Vista
+lateral.
+Figura 8. Ejecuci ´on de la modelaci ´on en LS-PrePost.
+Listo el modelo, se puede utilizar el men ´u Post,
+para identiﬁcar caracter ´ısticas como la deformaci ´on
+pl´astica, la temperatura, la tensi ´on, entre otras.
+Figura 9. Ejecuci ´on de la modelaci ´on en LS-PrePost con la
+vista seg ´un deformaci ´on pl ´astica.
+V. A N´ALISIS DEL MATERIAL
+V-A. Recolecci ´on de datos del Material
+Teniendo en cuenta los par ´ametros que se
+necesitan para poder ejecutar la simulaci ´on se
+revisan art ´ıculos que traten las caracter ´ısticas.
+Dentro de este proceso se encuentra que la
+mayor ´ıa de estos documentos abarcan ´unicamente
+algunos de los datos, mas ninguno de manera tan
+completa para tenerlos todos, de tal manera que
+el presente documento re ´une la informaci ´on de
+manera m ´as completa.
+Figura 10. Datos acerca del modelo Johnson Cook por Kiralni
+[?].
+Figura 11. Datos acerca del material por J.Sun [ ?]
+El titanio puede ser estudiado por el modelo
+Johnson-Cook para comprender su endurecimiento
+por tensi ´on y dilataci ´on t´ermica. Los datos anali-
+zados por Vijay [] fueron tomados como referencia
+con el objetivo de comparar los resultados practicos
+con los teoricos de la simulacion.
+En el an ´alisis de Johnson-Cook incluye par ´ame-
+tros como la densidad, el modulo elastico, razon
+de Poisson, calor especiﬁco, punto de fusion, tem-
+peratura ambiente, estres minimo para la fractura,
+resistencia mecanica.
+Posterior a esto, se deben ingresar los datos de
+la ecuaci ´on de estado para el material, sin embargo
+
+--- PAGE 4 ---
+
+4 UNIVERSIDAD NACIONAL DE COLOMBIA, DEPARTAMENTO DE INGENIER ´IA MEC ´ANICA Y MECATR ´ONICA.
+Figura 12. Tabla con los datos del material.
+Figura 13. Tabla con los datos del material. Por Yusuf Altintas
+Figura 14. Datos necesarios en el modelo Johnson-Cook.
+por acceso a recursos no se ha encontrado dicha
+ecuaci ´on para el titanio en estudio.
+El material se fue estudiando de acuerdo a
+como la simulaci ´on gu ´ıa fue introduciendo datos
+de diferentes autores como Vijay [6], Kiralni [ ?],
+J. Sun [ ?] y Kay [ ?].
+V-B. Deﬁnici ´on de la geometr ´ıa del proceso
+Este proceso se realizo paralelo a la ejecuci ´on
+de el an ´alisis inicial de LS-DYNA con el modelo
+ejemplo. Se tomaron valores de ´angulo de inciden-
+cia y de ´angulo de desprendimiento basados en los
+recomendados por Donachie [ ?].
+Para el material se manejaron medidas de
+40x20x20 mm. En los par ´ametros de corte ana-
+lizados est ´an los ´angulos .alfa”, ”gamma”,”beta”,
+espesor de corte .a2radio de curvatura ro”.Para el modelo de pr ´actica con el programa se
+manejo un alfa y gamma de 11.3, un beta de 67.3,
+un espesor de corte de 3.5 y un radio de curvatura
+de 0.3. Aspectos importantes estudiados por los
+autores son: Avance por diente, velocidad de corte y
+profundidad axial de corte. Estos ´ultimos se pueden
+observar en la imagen.
+Figura 15. Geometr ´ıa de la herramienta en el proceso
+Lo cual obtendr ´ıa una disposici ´on en el espacio
+de:
+Figura 16. Herramienta y material listas para comenzar a deﬁnir
+par´ametros.
+Figura 17. Simulacion inicial.
+V-C. Simulacion
+El software ejecuto una simulacion alrededor del
+aluminio con el objetivo de familiarizarse con la
+aplicacion. En esta imagen podemos observar el
+comportamiento de la deformacion plastica en el
+proceso.
+
+--- PAGE 5 ---
+
+OJEDA. MESOMICROMAQUINADO-MULTIEJE-ROBOTIZADO-CNC 5
+Figura 18. Analisis de la deformacion plastica en el proceso.

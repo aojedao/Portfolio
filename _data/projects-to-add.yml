@@ -1,0 +1,75 @@
+# Projects Queue - Add these projects to the portfolio
+# Status: not-started, in-progress, completed
+# Instructions: Update the status as you work on adding each project
+
+projects:
+  - id: 0
+    title: "SPH Microcutting Simulation in LS-DYNA"
+    description: "Titanium Ti-6Al-4V micromachining process modeling using Smoothed Particle Hydrodynamics"
+    technologies: ["LS-DYNA", "SPH", "Johnson-Cook", "FEM", "simulation", "micromachining"]
+    status: "completed"
+    priority: "high"
+    date_added: "2025-12-31"
+    date_completed: "2025-12-31"
+    local_path: "G:\\Materias(Personal)\\MESO-MICRO\\Artículo"
+    md_file: "_projects/sph-microcutting-simulation.md"
+    notes: "Successfully processed from PDF report and multimedia files. Author: Alejandro Ojeda Olarte, UNAL"
+    
+  - id: 1
+    title: "Digital Electronics Final Project"
+    description: "A final project for digital electronics course"
+    technologies: ["digital electronics", "verilog", "fpga"]
+    status: "not-started"
+    priority: "high"
+    date_added: "2025-12-31"
+    github_url: "https://github.com/unal-edigital1-lab/entrega-final-2021grupo03"
+    notes: "UNAL Digital 1 Lab - Entrega Final 2021 Grupo03"
+    
+  - id: 2
+    title: "Diseño Mecatronico"
+    description: "Mechatronic design project"
+    technologies: ["mechatronics", "robotics", "design"]
+    status: "not-started"
+    priority: "high"
+    date_added: "2025-12-31"
+    local_path: "F:\\UN\\Diseño Mecatronico"
+    notes: "Local project from UN folder on F drive"
+    
+  - id: 3
+    title: "Dibujo Basico"
+    description: "Basic drawing project"
+    technologies: ["drawing", "design"]
+    status: "not-started"
+    priority: "medium"
+    date_added: "2025-12-31"
+    local_path: "UNKNOWN - needs to be located"
+    notes: "Location needs to be determined"
+    
+  - id: 4
+    title: "Finitos"
+    description: "Finite elements project"
+    technologies: ["ANSYS", "finite elements", "simulation"]
+    status: "not-started"
+    priority: "medium"
+    date_added: "2025-12-31"
+    notes: "Has ANSYS file, but software not available"
+    
+  - id: 5
+    title: "Control"
+    description: "Control systems project"
+    technologies: ["MATLAB", "Simulink", "control systems"]
+    status: "not-started"
+    priority: "medium"
+    date_added: "2025-12-31"
+    local_path: "F:\\Desktop\\Control"
+    notes: "Needs MATLAB installed to run simulation file"
+    
+  - id: 6
+    title: "MesoMicro"
+    description: "Meso and micro scale project"
+    technologies: ["materials", "microscopy", "analysis"]
+    status: "ready"
+    priority: "high"
+    date_added: "2025-12-31"
+    local_path: "DriveBackup(G):\\Desktop\\MesoMicro"
+    notes: "All materials ready - can be added to portfolio"

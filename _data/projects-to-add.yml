@@ -54,14 +54,16 @@ projects:
     notes: "UNAL Robótica Industrial 2021-2. Website-based project (no local files). Team: Alejandro Ojeda, Brayan Calderón, Mateo Rodríguez. Images referenced from GitHub pages."
     
   - id: 4
-    title: "Diseño Mecatronico"
-    description: "Mechatronic design project"
-    technologies: ["mechatronics", "robotics", "design"]
-    status: "not-started"
+    title: "Electrical Panel Design: Star-Delta Motor Starter"
+    description: "Complete design of industrial electrical panel for 12HP three-phase motor control using star-delta starting method with 3D CAD modeling"
+    technologies: ["Autodesk Inventor", "CadeSIMU", "Star-Delta", "Motor Control", "Industrial Automation", "Electrical Design", "3D CAD"]
+    status: "completed"
     priority: "high"
     date_added: "2025-12-31"
-    local_path: "F:\\UN\\Diseño Mecatronico"
-    notes: "Local project from UN folder on F drive"
+    date_completed: "2025-12-31"
+    local_path: "F:\\UN\\Diseño Mecatrónico\\Parcial 2"
+    md_file: "_projects/electrical-panel-star-delta.md"
+    notes: "UNAL Diseño Mecatrónico. Complete star-delta motor starter panel with 3D GLTF model, control/power schematics, BOM. Components: ABB contactors, Schneider enclosure, Legrand controls."
     
   - id: 4
     description: "Basic drawing project"

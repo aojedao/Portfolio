@@ -15,6 +15,14 @@ github_url: "https://github.com/BrayanCalderon/ProyectoRobotica-2021-I"
 demo_url: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/"
 video_url: "https://www.youtube.com/watch?v=bwBbKobaoW8"
 
+gallery:
+  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/kuka-kr1501.png"
+    description: "KUKA KR150 Industrial Robot with rotary table setup"
+  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/fresadesbaste.jpeg"
+    description: "Roughing End Mill - Ø16mm cylindrical tool for bulk material removal"
+  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/fresaacabado.jpeg"
+    description: "Finishing Ball Mill - Ø10mm toroidal tool for surface finish"
+
 components:
   - name: "KUKA KR150 Industrial Robot"
     quantity: 1

@@ -18,7 +18,8 @@ gallery:
   - file: "/assets/images/projects/sph-microcutting/parameters-diagram.jpg"
     description: "Cutting tool geometry and parameters diagram"
   - file: "/assets/images/projects/sph-microcutting/assembly.jpg"
-    description: "Tool and material assembly setup in LS-PrePost"---
+    description: "Tool and material assembly setup in LS-PrePost"
+---
 
 ## Overview
 

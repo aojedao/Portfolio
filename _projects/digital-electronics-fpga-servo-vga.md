@@ -8,7 +8,7 @@ categories: [FPGA, Digital Electronics, Verilog, Embedded Systems]
 authors: ["Alejandro Ojeda Olarte", "Juan José Herrera"]
 institution: "Universidad Nacional de Colombia"
 course: "Electrónica Digital I"
-featured_image: "/assets/images/projects/digital-electronics/featured.jpg"
+featured_image: "/assets/images/projects/digital-electronics/servo.gif"
 github_url: "https://github.com/unal-edigital1-lab/entrega-final-2021grupo03"
 
 code_files:

@@ -476,20 +476,25 @@
   border-radius: var(--radius-lg);
   overflow: hidden;
   border: 1px solid var(--border-color);
+  display: flex;
+  flex-direction: column;
 }
 
 .gallery-image,
 .gallery-gif {
   width: 100%;
-  height: 250px;
-  object-fit: cover;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;
   cursor: zoom-in;
+  background-color: var(--background-color);
 }
 
 .gallery-video {
   width: 100%;
-  height: 250px;
-  object-fit: cover;
+  height: auto;
+  max-height: 600px;
+  object-fit: contain;
 }
 
 .media-description {

@@ -40,6 +40,20 @@ projects:
     notes: "UNAL Taller Bogotá 2019. Processed 2 GIF demos, 1 photo, 4 frontend UI images. Videos excluded (MP4 not playable yet). Team: Pilar Monroy, Jan Caroline Montaño, Alejandro Ojeda, David Sarmiento"
     
   - id: 3
+    title: "Robotic Bas-Relief Carving with KUKA KR150"
+    description: "CAM/CNC programming and simulation of bas-relief carving using KUKA KR150 industrial robot with SprutCAM Robot"
+    technologies: ["industrial robotics", "KUKA", "SprutCAM", "CAM", "CNC", "robotic machining", "simulation"]
+    status: "completed"
+    priority: "high"
+    date_added: "2025-12-31"
+    date_completed: "2025-12-31"
+    github_url: "https://github.com/BrayanCalderon/ProyectoRobotica-2021-I"
+    demo_url: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/"
+    video_url: "https://www.youtube.com/watch?v=bwBbKobaoW8"
+    md_file: "_projects/robotic-bas-relief-carving-kuka.md"
+    notes: "UNAL Robótica Industrial 2021-2. Website-based project (no local files). Team: Alejandro Ojeda, Brayan Calderón, Mateo Rodríguez. Images referenced from GitHub pages."
+    
+  - id: 4
     title: "Diseño Mecatronico"
     description: "Mechatronic design project"
     technologies: ["mechatronics", "robotics", "design"]

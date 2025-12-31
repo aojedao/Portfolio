@@ -188,8 +188,6 @@ gallery:
     description: "Altera Cyclone IV FPGA development board"
   - file: "/assets/images/projects/digital-electronics/USBBlaster.jpeg"
     description: "USB Blaster programmer connected to FPGA"
-  - file: "/assets/images/projects/digital-electronics/servo.jpeg"
-    description: "Tower Pro SG-5010 servo motor"
   - file: "/assets/images/projects/digital-electronics/servo.gif"
     description: "Servo motor position control demonstration"
   - file: "/assets/images/projects/digital-electronics/switch.gif"

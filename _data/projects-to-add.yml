@@ -28,6 +28,18 @@ projects:
     notes: "UNAL Digital 1 Lab - Project documented with Verilog code snippets. Images needed from repository: CycloneIV.jpeg, USBBlaster.jpeg, servo.jpg, monitoring displays"
     
   - id: 2
+    title: "Taller Bogotá - SITP UX Improvement"
+    description: "UX/UI design for improving Bogota's public transport information system with mobile app, interactive totems, and digital displays"
+    technologies: ["UX design", "UI design", "Android", "IoT", "blockchain", "urban mobility", "smart city"]
+    status: "completed"
+    priority: "high"
+    date_added: "2025-12-31"
+    date_completed: "2025-12-31"
+    local_path: "G:\\Materias(Personal)\\Taller Bogota"
+    md_file: "_projects/taller-bogota-sitp-ux.md"
+    notes: "UNAL Taller Bogotá 2019. Processed 2 GIF demos, 1 photo, 4 frontend UI images. Videos excluded (MP4 not playable yet). Team: Pilar Monroy, Jan Caroline Montaño, Alejandro Ojeda, David Sarmiento"
+    
+  - id: 3
     title: "Diseño Mecatronico"
     description: "Mechatronic design project"
     technologies: ["mechatronics", "robotics", "design"]
@@ -37,8 +49,7 @@ projects:
     local_path: "F:\\UN\\Diseño Mecatronico"
     notes: "Local project from UN folder on F drive"
     
-  - id: 3
-    title: "Dibujo Basico"
+  - id: 4
     description: "Basic drawing project"
     technologies: ["drawing", "design"]
     status: "not-started"

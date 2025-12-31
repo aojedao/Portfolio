@@ -1,0 +1,195 @@
+
+
+=== PAGE 1 ===
+
+MEMORIA
+¿Cómo garantizar información oportuna al usuario sobre la planeación de su 
+viaje para mejorar su experiencia en el sistema de transporte de Bogotà? R E T O
+¿PARA QUIÉN?¿QUÉ?
+¿POR QUÉ?Mejorar la experien-cia de viaje.
+El usuario.
+El inconformismo con 
+el sistema por parte 
+del usuario.
+D E T E R M I N A N T E S
+Factores economicosPilar Monroy
+Jan Caroline Montano Guerra
+Alejandro Ojeda
+David Sarmiento
+Densidad / Congestion
+Factores administrativosRelacion entre actores
+Control y segumiento
+Infraestructura
+T I E M P O
+
+
+=== PAGE 2 ===
+
+¿Cuánto estoy tardando en 
+llegar a mi destino?
+T I E M P O
+¿Existirá una manera de llegar más rápido?
+¿Por qué me cambiaron la ruta?
+¿Será que ese me sirve?¡De seguro viene lleno!
+¡Me demoro más esperando que en el viaje!Variables de tiempoUsuario
+SistemaDistancia a la toma de trans-porte
+Toma de varios busesEspera en paradero
+Desconocimien-to de las rutas
+Transferencia de pasajerosFrenado y aceleración en paradero
+Cantidad de paradasFlujo en la vía del busALGUNOS    DATOS
+Tomado de: DIAGNÓSTICOS DE LAS TIPOLOGÍAS DE PARADEROS DEL SITP 
+Y PLANTEAMIENTO DE PROPUESTAS DE MEJORAMIENTO EN BOGOTÁ.
+
+=== PAGE 3 ===
+
+1FRONTEND 2INFORMACIÓN 3DATOS
+BLOCKCHAIN BIG DATA
+Red social de movilidad en Bogotá Transformación de la informaciónPresentación de la información
+Análisis AI
+
+=== PAGE 4 ===
+
+FRONTEND
+FRONTEND¿?¿Cómo 
+llegar a?
+¿Dónde está mi bus?1 2
+Tu paraderoMÓVIL - APP
+FIJO - PARADERO
+¿Dónde para mi bus?Hora y fecha
+OrigenDirección
+Mapa
+3Respuestas
+Opciones de ruta Filtros de búsqueda
+Ruta más corta
+Cantidad de trasbordos
+Tiempo
+4
+Recorrido
+TiempoC11
+91
+SE14Elegir ruta
+C11
+91
+SE14
+Tu paradero
+Tu busElegir ruta
+C11 91 SE14¿Cómo llegar a?
+Mapa
+Nombre estaciónDESTINO
+2 3 451
+698 7
+101
+2
+3
+4
+56
+7
+8
+3RespuestasOpciones 
+de rutaC11
+91
+SE14Recorrido
+TiempoOrganizado 
+por bus más 
+cercano.RUTA DE NAVEGACIÓN
+
+=== PAGE 5 ===
+
+LICITACIÓN
+
+
+=== PAGE 6 ===
+
+PERSPECTIVA DE ABORDAJE
+1MODELO ACTUAL
+¿Qué tenemos hoy? ¿Cómo funciona? Cambios y desarrollo
+2PROPUESTA  DE 
+ALCANCE
+Alternativas de soluciónAnálisis de necesidades
+Determinar puntos de cambioMejora de la experienciaPlan de viaje
+3PROYECCIÓN 
+FUTURAActualización Mejoras Crecimiento
+
+
+=== PAGE 7 ===
+
+MODELO ACTUAL
+PARADERO M10
+MATERIALES
+Cubierta en lámina de policarbonato.
+Estructura en láminas y parales de acero.Tubo y platinas metálicas.
+ACABADOS
+Acero inoxidable mate visto.
+Policarbonato traslúcido curvo.
+
+
+=== PAGE 8 ===
+
+MODELO ACTUAL
+CENEFA
+Nombre y direcciónIndicación de paradero
+Módulo de rutas
+Información institucionalBANDERA
+Información permanente Información actualizableTipos de bandera
+Módulo braille
+
+=== PAGE 9 ===
+
+CRONOGRAMA Y ALCANCES
+RETO
+VALIDACIÓN DE LAS PROPUESTASPropuesta iconográﬁca
+PLANTEAMIENTO DE COMPLEMENTOS
+Gadgets Open CVANÁLISIS
+PROPUESTAPropuesta paradero M10
+Propuesta pantallas 
+(ruta de navegación)
+BLOCKCHAIN
+ Validación de Blockchain
+RFID Wi-Fi APP
+
+=== PAGE 10 ===
+
+FRONTEND
+MÓVIL
+
+
+=== PAGE 11 ===
+
+MODELO PROPUESTA
+PARADERO M10
+
+
+=== PAGE 12 ===
+
+FRONTEND
+PANTALLA
+
+=== PAGE 13 ===
+
+FRONTEND
+TÓTEM
+
+
+=== PAGE 14 ===
+
+Home
+Menú
+Planear el 
+viajeDatos del 
+paradero
+Ubicación 
+de la ruta1
+1
+1
+1Rutas/Para deros/
+Solic itud datos 2 Hora/Fecha Origen -Destino
+2Destino: Nombre 
+o MapaSelec cionar  
+Ruta
+3
+3Opciones  de 
+viaje: TrayectosInformación general 
+de la opciónFiltros 4
+4Información completa 
+de la opciónFRONTEND
+RUTA DE NAVEGACIÓN

@@ -173,7 +173,7 @@ layout: default
                             </video>
                             {% else %}
                             <img src="{{ media.file | relative_url }}"
-                                alt="{{ media.description | default: page.title }}" class="gallery-image" data-zoomable>
+                                alt="{{ media.description | default: page.title }}" class="gallery-image">
                             {% endif %}
                             {% if media.description %}
                             <p class="media-caption">{{ media.description }}</p>
@@ -200,8 +200,7 @@ layout: default
                         {% for schematic in page.schematics %}
                         <div class="schematic-container">
                             <img src="{{ schematic.file | relative_url }}"
-                                alt="{{ schematic.description | default: 'Circuit Schematic' }}" class="schematic-image"
-                                data-zoomable>
+                                alt="{{ schematic.description | default: 'Circuit Schematic' }}" class="schematic-image">
                         </div>
                         {% endfor %}
                     </div>

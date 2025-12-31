@@ -14,16 +14,16 @@ duration: "6 weeks"
 
 # 3D Model
 models:
-  - file: "/assets/models/projects/electrical-panel-design/TableroElectrico.gltf"
+  - file: "electrical-panel-design/TableroElectrico1.gltf"
     title: "Electrical Panel 3D Model"
     description: "Complete assembly of the star-delta motor starter panel with all components"
 
 # Gallery images
 gallery:
-  - file: "/assets/images/projects/electrical-panel/DiagramaControl.png"
+  - file: "electrical-panel/DiagramaControl.png"
     title: "Control Circuit Diagram"
     description: "Electrical control circuit schematic for star-delta starting sequence"
-  - file: "/assets/images/projects/electrical-panel/DiagramaFuerza.png"
+  - file: "electrical-panel/DiagramaFuerza.png"
     title: "Power Circuit Diagram"
     description: "Main power circuit showing contactor arrangement for star-delta configuration"
 

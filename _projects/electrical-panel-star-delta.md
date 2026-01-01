@@ -4,7 +4,7 @@ title: "Electrical Panel Design: Star-Delta Motor Starter"
 description: "Complete design and documentation of an industrial electrical panel for three-phase motor control using star-delta starting method, featuring 3D CAD modeling, electrical schematics, and component integration."
 date: 2024-11-15
 featured: true
-featured_image: "/assets/images/projects/electrical-panel-design/Box.png"
+featured_image: "/assets/images/projects/electrical-panel/Box.png"
 categories: [mechatronics, electrical-design, cad]
 tags: [Autodesk Inventor, CadeSIMU, Star-Delta, Motor Control, Industrial Automation, Electrical Panel, 3D Modeling]
 

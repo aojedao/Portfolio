@@ -7,8 +7,6 @@ date: 2022-02-03
 categories: [Robotics, ROS, SLAM, Autonomous Navigation]
 difficulty: Intermediate
 featured_image: "/assets/images/projects/practica/demo.gif"
-github_url: ""
-demo_url: ""
 tags: [ROS Kinetic, Turtlebot, SLAM, Gmapping, AMCL, Python, C++]
 
 code_files:

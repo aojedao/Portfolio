@@ -25,6 +25,7 @@ schematics:
   - file: "/assets/schematics/ebarisbot/screws.pdf"
     description: "Fastener Selection Analysis"
 
+
 gallery:
   - file: "/assets/images/projects/ebarisbot/demo.gif"
     description: "Ebarisbot functional prototype in operation"
@@ -42,6 +43,15 @@ gallery:
     description: "Electronic System Schematic"
   - file: "/assets/images/projects/ebarisbot/VelProfInicial.png"
     description: "Initial Velocity Profile"
+
+interactive_plot: true
+plot_config:
+  x_file: "/assets/schematics/ebarisbot/data/t.csv"
+  y_file: "/assets/schematics/ebarisbot/data/Torque_profile2.csv"
+  x_label: "Time (s)"
+  y_label: "Torque (Nm)"
+  title: "Simulated Torque Profile"
+
 ---
 
 ## Overview
@@ -57,11 +67,6 @@ Designed by Group G3A at Universidad Nacional de Colombia, the robot meets stric
 - **Mobile App Control**: Custom Android application developed in **App Inventor**, communicating via **Bluetooth (HC-06)**.
 - **Obstacle Avoidance**: Integrated ultrasonic sensor system to detect collisions and stop automatically.
 - **Robust Autonomy**: Powered by a 12V 5Ah Lead-Acid battery offering ~2 hours of continuous operation.
-
-<div class="gallery-grid">
-  <img src="/assets/images/projects/ebarisbot/protobajafidelidad.jpg" alt="Prototyping Phase" />
-  <img src="/assets/images/projects/ebarisbot/pruebapeso1.jpeg" alt="Weight Testing" />
-</div>
 
 ## Technical Specifications
 
@@ -89,98 +94,7 @@ The robot operates on a loop cycle processing inputs from two sources:
 
 ## Engineering Analysis: Torque Profile
 
-During the design phase, it was critical to simulate the torque requirements of the drive shaft to ensure the selected motors could handle the inertia of a 15kg load accelerating. The chart below visualizes the simulated torque profile over time during a standard movement cycle.
-
-<div id="loading-message">Loading analysis data...</div>
-<div id="chart-container" style="position: relative; height:400px; width:100%; margin-top: 2rem; margin-bottom: 2rem; display:none;">
-    <canvas id="mechanicsChart"></canvas>
-</div>
-
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<script>
-    async function loadData() {
-        try {
-            // Fetch the CSV files
-            const [timeResponse, torqueResponse] = await Promise.all([
-                fetch('/assets/schematics/ebarisbot/data/t.csv'),
-                fetch('/assets/schematics/ebarisbot/data/Torque_profile2.csv')
-            ]);
-
-            const timeText = await timeResponse.text();
-            const torqueText = await torqueResponse.text();
-
-            // Parse CSV (Found to be single line comma separated)
-            const timeData = timeText.split(',').map(Number).filter(n => !isNaN(n));
-            const torqueData = torqueText.split(',').map(Number).filter(n => !isNaN(n));
-
-            // Downsample if data is too large (> 5000 points)
-            const maxPoints = 2000;
-            const factor = Math.ceil(timeData.length / maxPoints);
-            
-            const sampledLabels = timeData.filter((_, i) => i % factor === 0);
-            const sampledData = torqueData.filter((_, i) => i % factor === 0);
-
-            // Hide loading, show chart
-            document.getElementById('loading-message').style.display = 'none';
-            document.getElementById('chart-container').style.display = 'block';
-
-            // Create Chart
-            const ctx = document.getElementById('mechanicsChart').getContext('2d');
-            new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: sampledLabels.map(t => t.toFixed(2)),
-                    datasets: [{
-                        label: 'Reduction Shaft Torque (Nm)',
-                        data: sampledData,
-                        borderColor: 'rgb(255, 99, 132)',
-                        backgroundColor: 'rgba(255, 99, 132, 0.2)',
-                        tension: 0.4,
-                        borderWidth: 2,
-                        pointRadius: 0
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    interaction: {
-                        mode: 'index',
-                        intersect: false,
-                    },
-                    scales: {
-                        x: {
-                            title: {
-                                display: true,
-                                text: 'Time (s)'
-                            },
-                            ticks: {
-                                maxTicksLimit: 10
-                            }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: 'Torque (Nm)'
-                            }
-                        }
-                    },
-                    plugins: {
-                        title: {
-                            display: true,
-                            text: 'Simulated Drive Shaft Torque during Acceleration Cycle'
-                        }
-                    }
-                }
-            });
-
-        } catch (error) {
-            console.error("Error loading data:", error);
-            document.getElementById('loading-message').innerText = "Unable to load visualization data.";
-        }
-    }
-
-    loadData();
-</script>
+During the design phase, it was critical to simulate the torque requirements of the drive shaft to ensure the selected motors could handle the inertia of a 15kg load accelerating. The interactive chart (right panel) visualizes the simulated torque profile over time during a standard movement cycle.
 
 ## Project Result
 

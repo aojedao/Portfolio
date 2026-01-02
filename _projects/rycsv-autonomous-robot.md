@@ -1,17 +1,32 @@
 ---
 layout: project
-title: "RyCSV: Autonomous R2D2 Robot"
+title: "Autonomous Tool Carrying Robot"
 date: 2022-01-20
-thumbnail: "/assets/images/projects/rycsv/featured_r2d2.jpg"
-description: "A fully autonomous R2D2 droid powered by ROS and Raspberry Pi, featuring simulation in Gazebo and real-time teleoperation."
+featured_image: "/assets/images/projects/rycsv/video_demo_1.gif"
+description: "A fully autonomous tool carrying robot (astromech inspired) robot powered by ROS and Raspberry Pi, featuring simulation in Gazebo and real-time teleoperation."
 category: "Robotics"
 tags: [ROS, Python, Raspberry Pi, Autonomous Systems, Gazebo, Simulation]
 github_url: "https://github.com/aojedao/rycsv"
+gallery:
+  - file: "/assets/images/projects/rycsv/RycsvCV.gif"
+    description: "Computer Vision demonstration"
+  - file: "/assets/images/projects/rycsv/RycsvSLAM.gif"
+    description: "SLAM and Navigation testing"
+  - file: "/assets/images/projects/rycsv/featured_r2d2.jpg"
+    description: "The autonomous R2D2 robot"
+  - file: "/assets/images/projects/rycsv/gazebo_sim.png"
+    description: "Gazebo simulation environment"
+  - file: "/assets/images/projects/rycsv/rosgraph.svg"
+    description: "ROS Node Graph architecture"
+  - file: "/assets/images/projects/rycsv/running_robot.png"
+    description: "Robot in operation"
+  - file: "/assets/images/projects/rycsv/video_demo_1.mp4"
+    description: "Mechanism and movement demo"
 ---
 
 ## Project Overview
 
-**RyCSV (Astromech)** is a robotics project focused on creating a functional, autonomous R2D2 unit. The project bridges the gap between simulation and reality by leveraging the **Robot Operating System (ROS)** to control both a virtual model in Gazebo and a physical robot powered by a Raspberry Pi.
+**Autonomous Tool Carrying Robot** is a robotics project focused on creating a functional, autonomous tool carrying robot. The project bridges the gap between simulation and reality by leveraging the **Robot Operating System (ROS)** to control both a virtual model in Gazebo and a physical robot powered by a Raspberry Pi.
 
 The system is designed to be modular, allowing for easy expansion of capabilities such as visual servoing and autonomous navigation. The core control architecture handles differential drive kinematics, consolidating motor control signals from high-level planners or teleoperation nodes.
 
@@ -181,22 +196,4 @@ Below are the core control scripts used in the project. The **Controller Node** 
           finally:
               termios.tcsetattr(sys.stdin, termios.TCSADRAIN, settings)
 
-## Gallery
 
-<div class="gallery-grid">
-  <div class="gallery-item">
-    <img src="/assets/images/projects/rycsv/gazebo_sim.png" alt="Gazebo Simulation Environment" class="gallery-img">
-    <p class="gallery-caption">Gazebo Simulation Environment</p>
-  </div>
-  <div class="gallery-item">
-    <img src="/assets/images/projects/rycsv/rosgraph.svg" alt="ROS Node Graph" class="gallery-img">
-    <p class="gallery-caption">ROS Node Architecture</p>
-  </div>
-  <div class="gallery-item">
-    <video controls class="gallery-video">
-      <source src="/assets/images/projects/rycsv/video_demo_1.mp4" type="video/mp4">
-      Your browser does not support the video tag.
-    </video>
-    <p class="gallery-caption">Mechanism & Movement Test</p>
-  </div>
-</div>

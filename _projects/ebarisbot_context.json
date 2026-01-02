@@ -1,0 +1,176 @@
+{
+  "project_name": "Ebarisbot",
+  "report_language": "en",
+  "media_count": {
+    "images": 20,
+    "models": 1,
+    "schematics": 4,
+    "videos": 1
+  },
+  "files": {
+    "images": [
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Ebarisbot.gif",
+        "file_type": "image",
+        "filename": "Ebarisbot.gif",
+        "relative_path": "Ebarisbot.gif"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Ebarisbot.jpg",
+        "file_type": "image",
+        "filename": "Ebarisbot.jpg",
+        "relative_path": "Ebarisbot.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\IMG_20220629_210428890.jpg",
+        "file_type": "image",
+        "filename": "IMG_20220629_210428890.jpg",
+        "relative_path": "IMG_20220629_210428890.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\IMG_20220629_210454933.jpg",
+        "file_type": "image",
+        "filename": "IMG_20220629_210454933.jpg",
+        "relative_path": "IMG_20220629_210454933.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\IMG_20220629_210708908.jpg",
+        "file_type": "image",
+        "filename": "IMG_20220629_210708908.jpg",
+        "relative_path": "IMG_20220629_210708908.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Prototipo Adaptador Canasta Pl\u00e1stica v15.png",
+        "file_type": "image",
+        "filename": "Prototipo Adaptador Canasta Pl\u00e1stica v15.png",
+        "relative_path": "Prototipo Adaptador Canasta Pl\u00e1stica v15.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\UserPic.png",
+        "file_type": "image",
+        "filename": "UserPic.png",
+        "relative_path": "UserPic.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Imagen Textura\\cardboard-wallpaper-template.jpg",
+        "file_type": "image",
+        "filename": "cardboard-wallpaper-template.jpg",
+        "relative_path": "Imagen Textura\\cardboard-wallpaper-template.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe de Dise\u00f1o\\Im\u00e1genes\\Fases.png",
+        "file_type": "image",
+        "filename": "Fases.png",
+        "relative_path": "Informe de Dise\u00f1o\\Im\u00e1genes\\Fases.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe de Dise\u00f1o\\Im\u00e1genes\\SE.png",
+        "file_type": "image",
+        "filename": "SE.png",
+        "relative_path": "Informe de Dise\u00f1o\\Im\u00e1genes\\SE.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe de Dise\u00f1o\\Im\u00e1genes\\Zigzag.png",
+        "file_type": "image",
+        "filename": "Zigzag.png",
+        "relative_path": "Informe de Dise\u00f1o\\Im\u00e1genes\\Zigzag.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\DiagramaVelocidades.JPG",
+        "file_type": "image",
+        "filename": "DiagramaVelocidades.JPG",
+        "relative_path": "Informe Final\\DiagramaVelocidades.JPG"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\protobajafidelidad.jpg",
+        "file_type": "image",
+        "filename": "protobajafidelidad.jpg",
+        "relative_path": "Informe Final\\protobajafidelidad.jpg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\pruebajornada.jpeg",
+        "file_type": "image",
+        "filename": "pruebajornada.jpeg",
+        "relative_path": "Informe Final\\pruebajornada.jpeg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\pruebapeso1.jpeg",
+        "file_type": "image",
+        "filename": "pruebapeso1.jpeg",
+        "relative_path": "Informe Final\\pruebapeso1.jpeg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\PruebaPeso2.jpeg",
+        "file_type": "image",
+        "filename": "PruebaPeso2.jpeg",
+        "relative_path": "Informe Final\\PruebaPeso2.jpeg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\Pruebapeso3.jpeg",
+        "file_type": "image",
+        "filename": "Pruebapeso3.jpeg",
+        "relative_path": "Informe Final\\Pruebapeso3.jpeg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\Pruebapeso4.jpeg",
+        "file_type": "image",
+        "filename": "Pruebapeso4.jpeg",
+        "relative_path": "Informe Final\\Pruebapeso4.jpeg"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\UserPic.png",
+        "file_type": "image",
+        "filename": "UserPic.png",
+        "relative_path": "Informe Final\\UserPic.png"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe Final\\VelProfInicial.png",
+        "file_type": "image",
+        "filename": "VelProfInicial.png",
+        "relative_path": "Informe Final\\VelProfInicial.png"
+      }
+    ],
+    "models": [
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\EbarisbotCompleto.gltf",
+        "file_type": "model",
+        "filename": "EbarisbotCompleto.gltf",
+        "relative_path": "EbarisbotCompleto.gltf"
+      }
+    ],
+    "schematics": [
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Anexo 2 Seleccion de Tornillos.pdf",
+        "file_type": "schematic",
+        "filename": "Anexo 2 Seleccion de Tornillos.pdf",
+        "relative_path": "Anexo 2 Seleccion de Tornillos.pdf"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\CertificadoFusion.pdf",
+        "file_type": "schematic",
+        "filename": "CertificadoFusion.pdf",
+        "relative_path": "CertificadoFusion.pdf"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe_de_Dise_o_PAI.pdf",
+        "file_type": "schematic",
+        "filename": "Informe_de_Dise_o_PAI.pdf",
+        "relative_path": "Informe_de_Dise_o_PAI.pdf"
+      },
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\Informe de Dise\u00f1o\\Anexo Formato de Impresion.pdf",
+        "file_type": "schematic",
+        "filename": "Anexo Formato de Impresion.pdf",
+        "relative_path": "Informe de Dise\u00f1o\\Anexo Formato de Impresion.pdf"
+      }
+    ],
+    "videos": [
+      {
+        "path": "f:\\MESGRO\\Ebarisbot\\VID_20220629_223755562.mp4",
+        "file_type": "video",
+        "filename": "VID_20220629_223755562.mp4",
+        "relative_path": "VID_20220629_223755562.mp4"
+      }
+    ]
+  }
+}

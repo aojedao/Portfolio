@@ -1,0 +1,147 @@
+
+You are an expert technical writer specializing in robotics and mechanical engineering projects.
+Your task is to convert a project report into a well-formatted MESGRO (Mechanical, Electrical, 
+Software Gallery for Robots) markdown file.
+
+PROJECT INFORMATION:
+====================
+
+Project Name: Ebarisbot
+Report Language: English
+
+AVAILABLE MEDIA FILES:
+======================
+
+Images (20 found):
+  - Ebarisbot.gif
+  - Ebarisbot.jpg
+  - IMG_20220629_210428890.jpg
+  - IMG_20220629_210454933.jpg
+  - IMG_20220629_210708908.jpg
+  - Prototipo Adaptador Canasta Plástica v15.png
+  - UserPic.png
+  - Imagen Textura\cardboard-wallpaper-template.jpg
+  - Informe de Diseño\Imágenes\Fases.png
+  - Informe de Diseño\Imágenes\SE.png
+  - Informe de Diseño\Imágenes\Zigzag.png
+  - Informe Final\DiagramaVelocidades.JPG
+  - Informe Final\protobajafidelidad.jpg
+  - Informe Final\pruebajornada.jpeg
+  - Informe Final\pruebapeso1.jpeg
+  - Informe Final\PruebaPeso2.jpeg
+  - Informe Final\Pruebapeso3.jpeg
+  - Informe Final\Pruebapeso4.jpeg
+  - Informe Final\UserPic.png
+  - Informe Final\VelProfInicial.png
+
+3D Models (1 found):
+  - EbarisbotCompleto.gltf
+
+Schematics (4 found):
+  - Anexo 2 Seleccion de Tornillos.pdf
+  - CertificadoFusion.pdf
+  - Informe_de_Dise_o_PAI.pdf
+  - Informe de Diseño\Anexo Formato de Impresion.pdf
+
+Videos (1 found):
+  - VID_20220629_223755562.mp4
+
+PROJECT REPORT (Original Language):
+====================================
+
+
+
+YOUR TASK:
+===========
+
+1. Read and understand the project report
+2. If in Spanish, translate key information to English
+3. Extract or infer:
+   - Project title
+   - Concise description (1-2 sentences)
+   - Main features and capabilities
+   - Technical components used
+   - System architecture
+   - Implementation approach
+   - Results and achievements
+
+4. Create a markdown file following the MESGRO template below:
+
+MESGRO TEMPLATE:
+================
+
+
+---
+layout: project
+title: "{title}"
+description: "{description}"
+date: {date}
+categories: [{categories}]
+featured_image: "/assets/images/projects/{project_slug}/featured.jpg"
+github_url: "{github_url}"
+demo_url: "{demo_url}"
+
+# 3D Models - Support for STL, OBJ, GLTF, GLB formats
+models:
+{models}
+
+# Circuit Schematics - PNG, JPG, SVG, PDF formats
+schematics:
+{schematics}
+
+# Images
+images:
+{images}
+
+# Code Files with syntax highlighting
+code_files:
+{code_files}
+
+---
+
+# Project Overview
+{overview}
+
+## Features
+
+{features}
+
+## Technical Details
+
+### Components
+{components}
+
+### Architecture
+{architecture}
+
+### Implementation
+{implementation}
+
+## Results
+
+{results}
+
+## Files & Resources
+
+- [Repository](https://github.com/aojedao/{project_slug})
+- [Models & CAD](/assets/models/{project_slug}/)
+- [Schematics](/assets/schematics/{project_slug}/)
+
+
+5. Include proper references to:
+   - Images: /assets/images/projects/ebarisbot/
+   - Models: /assets/models/projects/ebarisbot/
+   - Schematics: /assets/schematics/projects/ebarisbot/
+
+6. Format code blocks with proper language tags (cpp, python, javascript, etc.)
+
+7. Create a well-organized, professional markdown that:
+   - Uses clear sections and subsections
+   - Includes technical details appropriate for an engineering portfolio
+   - Highlights innovative aspects of the project
+   - Provides context for both technical and non-technical readers
+
+OUTPUT FORMAT:
+==============
+Return ONLY the complete markdown file content, ready to be saved as a .md file.
+Include the YAML front matter and all sections.

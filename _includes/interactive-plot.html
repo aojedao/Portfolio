@@ -2,7 +2,8 @@
     <h3>{{ page.plot_config.title | default: "System Performance Data" }}</h3>
     <div id="performance-plot"
         style="width:100%; height:400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
-        <div id="plot-loading" style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary);">
+        <div id="plot-loading"
+            style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary);">
             <i class="fas fa-circle-notch fa-spin"></i> &nbsp; Loading Data...
         </div>
     </div>
@@ -14,118 +15,129 @@
                 return;
             }
 
-            const plotConfig = {{ page.plot_config | jsonify }};
-            const container = document.getElementById('performance-plot');
-            const loading = document.getElementById('plot-loading');
+            {% if page.plot_config %}
+            const plotConfig = {
+                x_file: "{{ page.plot_config.x_file | relative_url }}",
+                y_file: "{{ page.plot_config.y_file | relative_url }}",
+                x_label: {{ page.plot_config.x_label | default: "Time (s)" | jsonify
+        }},
+            y_label: {{ page.plot_config.y_label | default: "Value" | jsonify }},
+            title: {{ page.plot_config.title | default: "System Performance Data" | jsonify }}
+            };
+        {% else %}
+        const plotConfig = null;
+        {% endif %}
+        const container = document.getElementById('performance-plot');
+        const loading = document.getElementById('plot-loading');
 
-            let xData = [];
-            let yData = [];
+        let xData = [];
+        let yData = [];
 
-            if (plotConfig && plotConfig.x_file && plotConfig.y_file) {
-                try {
-                    const [xRes, yRes] = await Promise.all([
-                        fetch(plotConfig.x_file),
-                        fetch(plotConfig.y_file)
-                    ]);
+        if (plotConfig && plotConfig.x_file && plotConfig.y_file) {
+            try {
+                const [xRes, yRes] = await Promise.all([
+                    fetch(plotConfig.x_file),
+                    fetch(plotConfig.y_file)
+                ]);
 
-                    if (!xRes.ok || !yRes.ok) throw new Error("Failed to fetch data files");
+                if (!xRes.ok || !yRes.ok) throw new Error("Failed to fetch data files");
 
-                    const xText = await xRes.text();
-                    const yText = await yRes.text();
+                const xText = await xRes.text();
+                const yText = await yRes.text();
 
-                    // Handle single-line CSVs (comma separated) or multi-line
-                    // Assuming comma separated based on user interaction history
-                    xData = xText.trim().split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
-                    yData = yText.trim().split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
+                // Handle single-line CSVs (comma separated) or multi-line
+                // Assuming comma separated based on user interaction history
+                xData = xText.trim().split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
+                yData = yText.trim().split(/[\s,]+/).map(Number).filter(n => !isNaN(n));
 
-                    if (xData.length === 0 || yData.length === 0) throw new Error("Parsed data is empty");
+                if (xData.length === 0 || yData.length === 0) throw new Error("Parsed data is empty");
 
-                    // Downsample if needed (for performance)
-                    const maxPoints = 5000;
-                    if (xData.length > maxPoints) {
-                        const step = Math.ceil(xData.length / maxPoints);
-                        xData = xData.filter((_, i) => i % step === 0);
-                        yData = yData.filter((_, i) => i % step === 0);
-                    }
-
-                } catch (err) {
-                    console.error("Error loading plot data:", err);
-                    loading.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error loading data: ' + err.message;
-                    return;
+                // Downsample if needed (for performance)
+                const maxPoints = 5000;
+                if (xData.length > maxPoints) {
+                    const step = Math.ceil(xData.length / maxPoints);
+                    xData = xData.filter((_, i) => i % step === 0);
+                    yData = yData.filter((_, i) => i % step === 0);
                 }
-            } else {
-                // Fallback Sample Data
-                console.log("No plot_config found, using sample data.");
-                xData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
-                yData = [10, 15, 13, 17, 22, 19, 25, 28, 23, 30];
+
+            } catch (err) {
+                console.error("Error loading plot data:", err);
+                loading.innerHTML = '<i class="fas fa-exclamation-circle"></i> Error loading data: ' + err.message;
+                return;
             }
+        } else {
+            // Fallback Sample Data
+            console.log("No plot_config found, using sample data.");
+            xData = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+            yData = [10, 15, 13, 17, 22, 19, 25, 28, 23, 30];
+        }
 
-            loading.style.display = 'none';
+        loading.style.display = 'none';
 
-            var trace1 = {
-                x: xData,
-                y: yData,
-                mode: 'lines',
-                name: plotConfig ? (plotConfig.y_label || 'Value') : 'Sample Data',
-                line: { shape: 'spline', color: '#3b82f6', width: 2 },
-                type: 'scatter'
-            };
+        var trace1 = {
+            x: xData,
+            y: yData,
+            mode: 'lines',
+            name: plotConfig ? (plotConfig.y_label || 'Value') : 'Sample Data',
+            line: { shape: 'spline', color: '#3b82f6', width: 2 },
+            type: 'scatter'
+        };
 
-            var data = [trace1];
+        var data = [trace1];
 
-            var layout = {
-                title: {
-                    text: '', // Title handled by HTML header
-                    font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() }
-                },
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                showlegend: true,
-                legend: {
-                    orientation: 'h',
-                    y: -0.1,
-                    font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() }
-                },
-                xaxis: {
-                    title: plotConfig ? (plotConfig.x_label || 'Time (s)') : 'Time (s)',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
-                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
-                },
-                yaxis: {
-                    title: plotConfig ? (plotConfig.y_label || 'Value') : 'Value',
-                    color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
-                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
-                },
-                margin: { l: 60, r: 20, b: 60, t: 20, pad: 4 }
-            };
+        var layout = {
+            title: {
+                text: '', // Title handled by HTML header
+                font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() }
+            },
+            paper_bgcolor: 'rgba(0,0,0,0)',
+            plot_bgcolor: 'rgba(0,0,0,0)',
+            showlegend: true,
+            legend: {
+                orientation: 'h',
+                y: -0.1,
+                font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() }
+            },
+            xaxis: {
+                title: plotConfig ? (plotConfig.x_label || 'Time (s)') : 'Time (s)',
+                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
+                gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+            },
+            yaxis: {
+                title: plotConfig ? (plotConfig.y_label || 'Value') : 'Value',
+                color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
+                gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+            },
+            margin: { l: 60, r: 20, b: 60, t: 20, pad: 4 }
+        };
 
-            var config = { responsive: true, displayModeBar: false };
+        var config = { responsive: true, displayModeBar: false };
 
-            Plotly.newPlot('performance-plot', data, layout, config);
+        Plotly.newPlot('performance-plot', data, layout, config);
 
-            // Handle theme changes to update plot colors
-            const observer = new MutationObserver(function (mutations) {
-                mutations.forEach(function (mutation) {
-                    if (mutation.attributeName === 'data-theme') {
-                        var update = {
-                            'title.font.color': getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
-                            'xaxis.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
-                            'yaxis.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
-                            'yaxis.gridcolor': getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                            'yaxis.zerolinecolor': getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                            'legend.font.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim()
-                        };
-                        Plotly.relayout('performance-plot', update);
-                    }
-                });
+        // Handle theme changes to update plot colors
+        const observer = new MutationObserver(function (mutations) {
+            mutations.forEach(function (mutation) {
+                if (mutation.attributeName === 'data-theme') {
+                    var update = {
+                        'title.font.color': getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim(),
+                        'xaxis.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
+                        'yaxis.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim(),
+                        'yaxis.gridcolor': getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                        'yaxis.zerolinecolor': getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                        'legend.font.color': getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim()
+                    };
+                    Plotly.relayout('performance-plot', update);
+                }
             });
+        });
 
-            observer.observe(document.documentElement, {
-                attributes: true,
-                attributeFilter: ['data-theme']
-            });
+        observer.observe(document.documentElement, {
+            attributes: true,
+            attributeFilter: ['data-theme']
+        });
         });
     </script>
 </div>

@@ -6,7 +6,7 @@ author: "Alejandro Ojeda Olarte"
 institution: "Universidad Nacional de Colombia"
 description: "Simulation of a microcutting process on titanium alloy using the Smoothed Particle Hydrodynamics (SPH) method"
 department: "Departamento de Ingeniería Mecánica y Mecatrónica"
-date: 2024-01-01
+date: 2017-04-12
 tags: [Simulation, SPH, Micromachining, LS-DYNA,  Titanium, FEM]
 difficulty: Advanced
 category: computational-mechanics

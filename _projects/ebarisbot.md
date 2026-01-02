@@ -20,9 +20,7 @@ models:
     description: "3D printed base control housing component"
 
 schematics:
-  - file: "/assets/schematics/ebarisbot/report.pdf"
-    description: "Full Engineering Design Report (Spanish)"
-  - file: "/assets/schematics/ebarisbot/screws.pdf"
+  - file: "/assets/schematics/ebarisbot/circuit.png"
     description: "Fastener Selection Analysis"
 
 
@@ -31,13 +29,13 @@ gallery:
     description: "Ebarisbot functional prototype in operation"
   - file: "/assets/images/projects/ebarisbot/UserPic.png"
     description: "Target user scenario rendering"
-  - file: "/assets/images/projects/ebarisbot/Ebarisbot.jpg"
+  - file: "/assets/images/projects/ebarisbot/featured.jpg"
     description: "Final prototype visualization"
   - file: "/assets/images/projects/ebarisbot/protobajafidelidad.jpg"
     description: "Low-fidelity cardboard prototype for ergonomic validation"
   - file: "/assets/images/projects/ebarisbot/DiagramaVelocidades.JPG"
     description: "Velocity Diagram Analysis"
-  - file: "/assets/images/projects/ebarisbot/pruebapeso1.jpeg"
+  - file: "/assets/images/projects/ebarisbot/pruebapeso1.jpeg" 
     description: "Static load testing (15kg)"
   - file: "/assets/images/projects/ebarisbot/SE.png"
     description: "Electronic System Schematic"

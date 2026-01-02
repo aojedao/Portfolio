@@ -9,19 +9,21 @@ authors: ["Alejandro Ojeda", "Brayan Calderón", "Mateo Rodríguez"]
 institution: "Universidad Nacional de Colombia"
 course: "Robótica Industrial"
 semester: "2021-2"
-featured_image: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/kuka-kr1501.png"
+featured_image: "/assets/images/projects/robotic-bas-relief/Robotica__SprutCAM_en_5_minutos.gif"
 
 github_url: "https://github.com/BrayanCalderon/ProyectoRobotica-2021-I"
 demo_url: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/"
 video_url: "https://www.youtube.com/watch?v=bwBbKobaoW8"
 
 gallery:
-  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/kuka-kr1501.png"
+  - file: "/assets/images/projects/robotic-bas-relief/Robotica__SprutCAM_en_5_minutos.gif"
+    description: "SprutCAM Simulation - Robot Bas-Relief Carving Animation"
+  - file: "/assets/images/projects/robotic-bas-relief/KukaModelCAD.png"
     description: "KUKA KR150 Industrial Robot with rotary table setup"
-  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/fresadesbaste.jpeg"
-    description: "Roughing End Mill - Ø16mm cylindrical tool for bulk material removal"
-  - file: "https://brayancalderon.github.io/ProyectoRobotica-2021-I/images/fresaacabado.jpeg"
-    description: "Finishing Ball Mill - Ø10mm toroidal tool for surface finish"
+  - file: "/assets/images/projects/robotic-bas-relief/MesaRotar.jpeg"
+    description: "Rotary Table (4th Axis) - CNC Rotary Positioning Table"
+  - file: "/assets/images/projects/robotic-bas-relief/ResultadoEsperado.png"
+    description: "Expected Bas-Relief Carving Result"
 
 components:
   - name: "KUKA KR150 Industrial Robot"

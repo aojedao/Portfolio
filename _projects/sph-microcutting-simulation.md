@@ -4,6 +4,7 @@ title: "SPH Microcutting Simulation in LS-DYNA"
 subtitle: "Titanium Ti-6Al-4V Micromachining Process Modeling"
 author: "Alejandro Ojeda Olarte"
 institution: "Universidad Nacional de Colombia"
+description: "Simulation of a microcutting process on titanium alloy using the Smoothed Particle Hydrodynamics (SPH) method"
 department: "Departamento de Ingeniería Mecánica y Mecatrónica"
 date: 2024-01-01
 tags: [Simulation, SPH, Micromachining, LS-DYNA,  Titanium, FEM]

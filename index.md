@@ -32,7 +32,7 @@ layout: default
     </div>
     
     <div class="projects-grid-featured">
-      {% for project in site.projects limit:9 %}
+      {% for project in site.projects | reverse limit:9 %}
         <div class="project-card-featured">
           <div class="project-media">
             {% if project.featured_image %}

@@ -39,26 +39,35 @@
             try {
                 const response = await fetch("{{ '/assets/data/servos/robot_cartesian_path.csv' | relative_url }}");
                 const text = await response.text();
-                const rows = text.trim().split('\n').slice(1); // Skip header
+                // Robust parsing: split by newlines, then by comma, filtering out empty/whitespace
+                const rows = text.trim().split(/\r?\n/).slice(1);
                 const x = [], y = [];
 
                 rows.forEach(row => {
-                    const cols = row.split(',');
-                    if (cols.length >= 2) {
-                        x.push(parseFloat(cols[0]));
-                        y.push(parseFloat(cols[1]));
+                    const parts = row.split(',');
+                    if (parts.length >= 2) {
+                        const valX = parseFloat(parts[0]);
+                        const valY = parseFloat(parts[1]);
+                        if (!isNaN(valX) && !isNaN(valY)) {
+                            x.push(valX);
+                            y.push(valY);
+                        }
                     }
                 });
 
-                Plotly.newPlot('cartesian-plot', [{
-                    x: x, y: y, mode: 'lines', name: 'End Effector Path',
-                    line: { color: '#3b82f6', width: 2 }
-                }], {
-                    ...commonLayout,
-                    title: 'Cartesian Path (X vs Y)',
-                    xaxis: { ...commonLayout.xaxis, title: 'X Position (m)' },
-                    yaxis: { ...commonLayout.yaxis, title: 'Y Position (m)', scaleanchor: "x" }
-                }, { responsive: true, displayModeBar: false });
+                if (x.length > 0) {
+                    Plotly.newPlot('cartesian-plot', [{
+                        x: x, y: y, mode: 'lines', name: 'End Effector Path',
+                        line: { color: '#3b82f6', width: 2 }
+                    }], {
+                        ...commonLayout,
+                        title: 'Cartesian Path (X vs Y)',
+                        xaxis: { ...commonLayout.xaxis, title: 'X Position (m)' },
+                        yaxis: { ...commonLayout.yaxis, title: 'Y Position (m)', scaleanchor: "x" }
+                    }, { responsive: true, displayModeBar: false });
+                } else {
+                    console.warn("Servos Plot: No valid X/Y data parsed.");
+                }
 
             } catch (e) { console.error('Error plotting cartesian path:', e); }
 
@@ -66,27 +75,37 @@
             try {
                 const response = await fetch("{{ '/assets/data/servos/robot_joint_dynamics.csv' | relative_url }}");
                 const text = await response.text();
-                const rows = text.trim().split('\n').slice(1);
+                const rows = text.trim().split(/\r?\n/).slice(1);
                 const t = [], th1 = [], th2 = [];
 
                 rows.forEach(row => {
-                    const cols = row.split(',');
-                    if (cols.length >= 3) {
-                        t.push(parseFloat(cols[0]));
-                        th1.push(parseFloat(cols[1]));
-                        th2.push(parseFloat(cols[2]));
+                    const parts = row.split(',');
+                    if (parts.length >= 3) {
+                        const valT = parseFloat(parts[0]);
+                        const valTh1 = parseFloat(parts[1]);
+                        const valTh2 = parseFloat(parts[2]);
+
+                        if (!isNaN(valT) && !isNaN(valTh1) && !isNaN(valTh2)) {
+                            t.push(valT);
+                            th1.push(valTh1);
+                            th2.push(valTh2);
+                        }
                     }
                 });
 
-                Plotly.newPlot('joint-plot', [
-                    { x: t, y: th1, mode: 'lines', name: 'Theta 1', line: { color: '#10b981' } },
-                    { x: t, y: th2, mode: 'lines', name: 'Theta 2', line: { color: '#ef4444' } }
-                ], {
-                    ...commonLayout,
-                    title: 'Joint Angles Over Time',
-                    xaxis: { ...commonLayout.xaxis, title: 'Time (s)' },
-                    yaxis: { ...commonLayout.yaxis, title: 'Angle (rad)' }
-                }, { responsive: true, displayModeBar: false });
+                if (t.length > 0) {
+                    Plotly.newPlot('joint-plot', [
+                        { x: t, y: th1, mode: 'lines', name: 'Theta 1', line: { color: '#10b981' } },
+                        { x: t, y: th2, mode: 'lines', name: 'Theta 2', line: { color: '#ef4444' } }
+                    ], {
+                        ...commonLayout,
+                        title: 'Joint Angles Over Time',
+                        xaxis: { ...commonLayout.xaxis, title: 'Time (s)' },
+                        yaxis: { ...commonLayout.yaxis, title: 'Angle (rad)' }
+                    }, { responsive: true, displayModeBar: false });
+                } else {
+                    console.warn("Servos Plot: No valid Joint data parsed.");
+                }
 
             } catch (e) { console.error('Error plotting joint dynamics:', e); }
         });

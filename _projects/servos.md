@@ -6,6 +6,7 @@ featured_image: "/assets/images/projects/servos/mechanics_explorer.gif"
 description: "Implementation of inverse kinematics and trajectory planning for a 2-DOF planar robot arm to trace a complex geometric path, simulated in MATLAB/Simscape."
 category: "Robotics"
 tags: [MATLAB, Simscape, Inverse Kinematics, Robotics, Control Systems]
+custom_plot: "servos-plots.html"
 models:
   - file: "/assets/models/servos/arm.gltf"
     description: "3D Model of the 2-DOF Arm"
@@ -59,9 +60,7 @@ where $l_1$ and $l_2$ are the link lengths ($l_1 = 0.22m, l_2 = 0.17m$) and $r$ 
 
 The mathematical model was implemented in MATLAB to generate the joint trajectories. These trajectories were then fed into a **Simscape Multibody** model of the robot.
 
-The simulation results confirmed the accuracy of the kinematic model. The plots below show the resulting joint dynamics and the successful tracking of the Cartesian path.
-
-{% include servos-plots.html %}
+The simulation results confirmed the accuracy of the kinematic model. The plots (see right panel) show the resulting joint dynamics and the successful tracking of the Cartesian path.
 
 
 ### Resources

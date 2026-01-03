@@ -1,0 +1,89 @@
+<div class="project-section-clean">
+    <h3>Data Visualization</h3>
+    
+    <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
+        <!-- Cartesian Path Plot -->
+        <div id="cartesian-plot" style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);"></div>
+        
+        <!-- Joint Dynamics Plot -->
+        <div id="joint-plot" style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);"></div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', async function() {
+            if (typeof Plotly === 'undefined') return;
+
+            const commonLayout = {
+                paper_bgcolor: 'rgba(0,0,0,0)',
+                plot_bgcolor: 'rgba(0,0,0,0)',
+                font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() },
+                showlegend: true,
+                legend: { orientation: 'h', y: -0.2 },
+                margin: { l: 50, r: 20, b: 50, t: 30 },
+                xaxis: { 
+                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+                },
+                yaxis: { 
+                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+                }
+            };
+
+            // Load and Plot Cartesian Path
+            try {
+                const response = await fetch('/assets/data/servos/robot_cartesian_path.csv');
+                const text = await response.text();
+                const rows = text.trim().split('\n').slice(1); // Skip header
+                const x = [], y = [];
+                
+                rows.forEach(row => {
+                    const cols = row.split(',');
+                    if(cols.length >= 2) {
+                        x.push(parseFloat(cols[0]));
+                        y.push(parseFloat(cols[1]));
+                    }
+                });
+
+                Plotly.newPlot('cartesian-plot', [{
+                    x: x, y: y, mode: 'lines', name: 'End Effector Path',
+                    line: { color: '#3b82f6', width: 2 }
+                }], {
+                    ...commonLayout,
+                    title: 'Cartesian Path (X vs Y)',
+                    xaxis: { ...commonLayout.xaxis, title: 'X Position (m)' },
+                    yaxis: { ...commonLayout.yaxis, title: 'Y Position (m)', scaleanchor: "x" }
+                }, { responsive: true, displayModeBar: false });
+
+            } catch (e) { console.error('Error plotting cartesian path:', e); }
+
+            // Load and Plot Joint Dynamics
+            try {
+                const response = await fetch('/assets/data/servos/robot_joint_dynamics.csv');
+                const text = await response.text();
+                const rows = text.trim().split('\n').slice(1);
+                const t = [], th1 = [], th2 = [];
+
+                rows.forEach(row => {
+                    const cols = row.split(',');
+                    if(cols.length >= 3) {
+                        t.push(parseFloat(cols[0]));
+                        th1.push(parseFloat(cols[1]));
+                        th2.push(parseFloat(cols[2]));
+                    }
+                });
+
+                Plotly.newPlot('joint-plot', [
+                    { x: t, y: th1, mode: 'lines', name: 'Theta 1', line: { color: '#10b981' } },
+                    { x: t, y: th2, mode: 'lines', name: 'Theta 2', line: { color: '#ef4444' } }
+                ], {
+                    ...commonLayout,
+                    title: 'Joint Angles Over Time',
+                    xaxis: { ...commonLayout.xaxis, title: 'Time (s)' },
+                    yaxis: { ...commonLayout.yaxis, title: 'Angle (rad)' }
+                }, { responsive: true, displayModeBar: false });
+
+            } catch (e) { console.error('Error plotting joint dynamics:', e); }
+        });
+    </script>
+</div>

@@ -1,8 +1,8 @@
 <!-- Universal Plot Handler - Robust CSV visualization using Plotly -->
-<div id="universal-plots-container" style="width: 100%; padding: 0;">
+<div id="universal-plots-container" style="width: 100%; padding: 0; margin: 20px 0;">
     <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); margin: 0 0 var(--spacing-md) 0;">{{ page.plots_title | default: "Data Visualization" }}</h3>
 
-    <div id="plots-grid" style="display: grid; grid-template-columns: 1fr; gap: 20px; width: 100%; margin: 20px 0; padding: 0;"></div>
+    <div id="plots-grid" style="width: 100%; margin: 0; padding: 0;"></div>
 
     <script>
         (function () {
@@ -109,36 +109,23 @@
                     const container = document.createElement('div');
                     container.id = config.id;
                     container.style.cssText = `
-                        height: 400px;
                         width: 100%;
+                        height: 400px;
                         background: var(--surface-color);
                         border-radius: var(--radius-lg);
                         border: 1px solid var(--border-color);
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        flex-direction: column;
-                        position: relative;
-                        box-sizing: border-box;
-                        overflow: hidden;
+                        margin-bottom: 20px;
                     `;
-
-                    const status = document.createElement('div');
-                    status.className = 'plot-status';
-                    status.style.cssText = 'color: var(--text-secondary); text-align: center;';
-                    status.innerText = 'Loading...';
-                    container.appendChild(status);
                     grid.appendChild(container);
 
                     // Load and render plot asynchronously
-                    loadAndRenderPlot(config, container, status);
+                    loadAndRenderPlot(config, container);
                 }
             }
 
-            async function loadAndRenderPlot(config, container, statusEl) {
+            async function loadAndRenderPlot(config, container) {
                 try {
                     // Fetch X data
-                    statusEl.innerText = 'Fetching data...';
                     const xRes = await fetch(config.xFile);
                     if (!xRes.ok) throw new Error(`X file not found (${config.xFile})`);
                     const xRaw = await xRes.text();
@@ -215,22 +202,20 @@
                     }
 
                     // Render
-                    statusEl.innerText = 'Rendering...';
-                    renderPlot(config, xData, yDatasets, container, statusEl);
+                    renderPlot(config, xData, yDatasets, container);
 
                 } catch (err) {
                     console.error("[UniversalPlotHandler] Plot error:", err);
-                    statusEl.innerText = '';
-                    statusEl.parentElement.innerHTML = `
-                        <div style="color: #ef4444; text-align: center; padding: 20px;">
-                            <div style="font-weight: bold;">⚠ Plot Error</div>
-                            <div style="font-size: 0.85em; margin-top: 8px; max-width: 300px;">${err.message}</div>
+                    container.innerHTML = `
+                        <div style="color: #ef4444; text-align: center; padding: 20px; line-height: 1.6;">
+                            <div style="font-weight: bold; font-size: 1.1em;">⚠ Plot Error</div>
+                            <div style="font-size: 0.9em; margin-top: 8px;">${err.message}</div>
                         </div>
                     `;
                 }
             }
 
-            function renderPlot(config, xData, yDatasets, container, statusEl) {
+            function renderPlot(config, xData, yDatasets, container) {
                 const traces = yDatasets.map((dataset, idx) => ({
                     x: xData,
                     y: dataset.data,
@@ -272,13 +257,11 @@
 
                 Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false })
                     .then(() => {
-                        statusEl.parentElement.removeChild(statusEl);
+                        // Plot rendered successfully
                     })
                     .catch(err => {
                         console.error("[UniversalPlotHandler] Plotly.newPlot error:", err);
-                        statusEl.innerText = 'Rendering failed';
                     });
-            }
 
             // ============ Initialization ============
             if (document.readyState === 'loading') {

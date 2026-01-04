@@ -14,8 +14,8 @@ demo_url: ""
 tags: [ROS, BeagleBone Blue, Computer Vision, Motion Control, Python, C++, Autonomous Navigation]
 
 models:
-  - file: ""
-    description: "3D models not currently available"
+  - file: "/assets/models/hykabai/Hykabai.gltf"
+    description: "3D model of the Hykabaï"
 
 schematics:
   - file: "/assets/schematics/hykabai/BasicFunctionalDiagram.drawio.svg"

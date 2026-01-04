@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test Handler with Embedded Data</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #fafafa; }
+        .section { margin: 20px 0; }
+        h2 { border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; background: white; }
+        .success { border-left: 4px solid #28a745; background: #d4edda; }
+        .error { border-left: 4px solid #dc3545; background: #f8d7da; }
+        pre { overflow-x: auto; background: #f5f5f5; padding: 10px; font-size: 12px; }
+    </style>
+</head>
+<body>
+    <h1>Handler Test - Embedded CSV Data</h1>
+    
+    <div class="section">
+        <h2>Status</h2>
+        <div id="status"></div>
+    </div>
+
+    <div class="section">
+        <h2>Test Plots</h2>
+        <div id="plot-0" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+        <div id="plot-1" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+        <div id="plot-2" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+    </div>
+
+    <script>
+        const statusDiv = document.getElementById('status');
+        
+        // Embed CSV data directly
+        const csvData = {
+            'cartesian': `X_Position,Y_Position
+0.0,0.0
+0.1,0.05
+0.2,0.08
+0.3,0.1
+0.4,0.09
+0.5,0.05`,
+            'joint': `Time,Theta1,Theta2,Vel1,Vel2
+0,1.57,-1.57,0,0
+0.1,1.5,-1.65,0.7,-0.8
+0.2,1.4,-1.73,0.7,-0.8
+0.3,1.3,-1.81,0.7,-0.8
+0.4,1.2,-1.89,0.7,-0.8
+0.5,1.1,-1.97,0.7,-0.8`,
+            'torque': `Time,Torque
+0,0.367
+0.5,0.367
+1,0.367
+1.5,0.0178
+2,0.0178
+2.5,0.349
+3,0.349
+3.5,0.349
+4,0.3`
+        };
+
+        // CSV parsing function (same as handler)
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) return { headers: [], rows: [] };
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => {
+                    const num = parseFloat(v.trim());
+                    return isNaN(num) ? null : num;
+                });
+                rows.push(values);
+            }
+            return { headers, rows };
+        }
+
+        // Get column data (same as handler)
+        function getColumn(data, columnIndex) {
+            return data.rows.map(row => row[columnIndex]).filter(v => v !== null);
+        }
+
+        // Test configurations
+        const configs = [
+            {
+                id: 'plot-0',
+                title: 'Cartesian Path (X vs Y)',
+                csvKey: 'cartesian',
+                xColumn: 0,
+                yFiles: [{ column: 1, label: 'End Effector Path' }],
+                xLabel: 'X Position (m)',
+                yLabel: 'Y Position (m)'
+            },
+            {
+                id: 'plot-1',
+                title: 'Joint Angles Over Time',
+                csvKey: 'joint',
+                xColumn: 0,
+                yFiles: [
+                    { column: 1, label: 'Joint 1 Angle (Theta 1)' },
+                    { column: 2, label: 'Joint 2 Angle (Theta 2)' }
+                ],
+                xLabel: 'Time (s)',
+                yLabel: 'Angle (rad)'
+            },
+            {
+                id: 'plot-2',
+                title: 'Torque Profile Over Time',
+                csvKey: 'torque',
+                xColumn: 0,
+                yFiles: [{ column: 1, label: 'Motor Torque' }],
+                xLabel: 'Time (s)',
+                yLabel: 'Torque (Nm)'
+            }
+        ];
+
+        const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6'];
+        let colorIdx = 0;
+        function getColor() { return colors[colorIdx++ % colors.length]; }
+
+        async function testHandler() {
+            if (typeof Plotly === 'undefined') {
+                statusDiv.innerHTML = '<div class="result error">Plotly not loaded!</div>';
+                return;
+            }
+            statusDiv.innerHTML = '<div class="result success">Plotly loaded successfully</div>';
+
+            for (const config of configs) {
+                try {
+                    // Parse CSV (using embedded data)
+                    const csv = csvData[config.csvKey];
+                    if (!csv) throw new Error(`No CSV data for ${config.csvKey}`);
+                    
+                    const parsed = parseCSV(csv);
+                    const xData = getColumn(parsed, config.xColumn);
+                    
+                    if (xData.length === 0) throw new Error('X data is empty');
+                    
+                    const traces = [];
+                    for (const yFile of config.yFiles) {
+                        const yData = getColumn(parsed, yFile.column);
+                        
+                        if (yData.length > 0) {
+                            const len = Math.min(xData.length, yData.length);
+                            traces.push({
+                                x: xData.slice(0, len),
+                                y: yData.slice(0, len),
+                                mode: 'lines',
+                                name: yFile.label,
+                                line: { color: getColor(), width: 2 }
+                            });
+                        }
+                    }
+                    
+                    if (traces.length === 0) throw new Error('No Y data');
+                    
+                    const layout = {
+                        title: config.title,
+                        xaxis: { title: config.xLabel },
+                        yaxis: { title: config.yLabel },
+                        showlegend: traces.length > 1,
+                        responsive: true,
+                        margin: { l: 60, r: 20, t: 40, b: 60 }
+                    };
+                    
+                    Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false });
+                    statusDiv.innerHTML += `<div class="result success">✓ ${config.title} rendered</div>`;
+                    
+                } catch (err) {
+                    document.getElementById(config.id).innerHTML = `<div style="padding: 20px; color: red;"><strong>Error:</strong> ${err.message}</div>`;
+                    statusDiv.innerHTML += `<div class="result error">✗ ${config.title}: ${err.message}</div>`;
+                }
+            }
+        }
+
+        // Run tests when Plotly is ready
+        if (typeof Plotly !== 'undefined') {
+            testHandler();
+        } else {
+            statusDiv.innerHTML = '<div class="result">Waiting for Plotly to load...</div>';
+            const checkPlotly = setInterval(() => {
+                if (typeof Plotly !== 'undefined') {
+                    clearInterval(checkPlotly);
+                    testHandler();
+                }
+            }, 100);
+        }
+    </script>
+</body>
+</html>

@@ -192,7 +192,7 @@ layout: default
                 </div>
                 {% endif %}
 
-                <!-- Custom Plot Include (for multi-plot or complex visualizations) -->
+                <!-- Custom Plot Include -->
                 {% if page.custom_plot %}
                 <div class="project-media-group">
                     {% include {{ page.custom_plot }} %}
@@ -212,12 +212,13 @@ layout: default
                         </div>
                         {% endfor %}
                     </div>
-                </section>
-                {% endif %}
-
             </div>
+            </section>
+            {% endif %}
+
         </div>
     </div>
+</div>
 </div>
 
 <!-- Project Navigation -->

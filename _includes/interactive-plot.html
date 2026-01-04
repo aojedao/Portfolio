@@ -1,152 +1,181 @@
 <div class="project-section-clean" id="interactive-data">
     <h3>{{ page.plot_config.title | default: "System Performance Data" }}</h3>
+
+    <!-- Plot Container -->
     <div id="performance-plot"
-        style="width:100%; height:400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+        style="width:100%; height:400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color); position: relative;">
+        <!-- Loading Overlay -->
         <div id="plot-loading"
-            style="display: flex; justify-content: center; align-items: center; height: 100%; color: var(--text-secondary); flex-direction: column; gap: 10px;">
-            <div><i class="fas fa-circle-notch fa-spin"></i> &nbsp; Loading Visualization Data...</div>
-            <div id="plot-debug" style="font-size: 0.8em; color: var(--text-tertiary);"></div>
+            style="position: absolute; inset: 0; display: flex; justify-content: center; align-items: center; background: var(--surface-color); z-index: 10; flex-direction: column; gap: 12px; transition: opacity 0.3s;">
+            <div style="font-size: 1.2em; color: var(--text-primary);"><i class="fas fa-circle-notch fa-spin"></i>
+                &nbsp; Initializing...</div>
+            <div id="plot-status-text" style="color: var(--text-secondary); font-family: monospace; font-size: 0.9em;">
+                Preparing...</div>
         </div>
     </div>
 
     <script>
-        // Use an IIFE to avoid global scope pollution
         (function () {
             const containerId = 'performance-plot';
             const loadingId = 'plot-loading';
+            const statusId = 'plot-status-text';
+
+            async function updateStatus(msg) {
+                const el = document.getElementById(statusId);
+                if (el) el.innerText = msg;
+                console.log("[InteractivePlot] " + msg);
+                // Allow UI to update
+                await new Promise(r => requestAnimationFrame(r));
+            }
 
             async function initPlot() {
-                const loading = document.getElementById(loadingId);
-                const debug = document.getElementById('plot-debug');
+                const loadingEl = document.getElementById(loadingId);
 
-                function log(msg) {
-                    console.log("[InteractivePlot] " + msg);
-                    if (debug) debug.innerText = msg;
-                }
-
-                // Ensure Plotly is loaded
-                if (typeof Plotly === 'undefined') {
-                    // Try waiting a moment
-                    log("Waiting for Plotly...");
-                    await new Promise(r => setTimeout(r, 500));
+                try {
+                    // 1. WaitForPlotly
                     if (typeof Plotly === 'undefined') {
-                        log("Error: Plotly library not found.");
-                        if (loading) loading.innerHTML = "Error: Plotly library failed to load.";
-                        return;
-                    }
-                }
-
-                {% if page.plot_config %}
-                const plotConfig = {
-                    x_file: "{{ page.plot_config.x_file | relative_url }}",
-                    y_file: "{{ page.plot_config.y_file | relative_url }}",
-                    x_label: "{{ page.plot_config.x_label | default: 'Time (s)' }}",
-                    y_label: "{{ page.plot_config.y_label | default: 'Value' }}",
-                    title: "{{ page.plot_config.title | default: 'System Performance Data' }}"
-                };
-                {% else %}
-                const plotConfig = null;
-                {% endif %}
-
-                let xData = [];
-                let yData = [];
-
-                if (plotConfig && plotConfig.x_file && plotConfig.y_file) {
-                    try {
-                        log("Fetching data files...");
-                        const [xRes, yRes] = await Promise.all([
-                            fetch(plotConfig.x_file),
-                            fetch(plotConfig.y_file)
-                        ]);
-
-                        if (!xRes.ok || !yRes.ok) throw new Error(`Fetch failed: X:${xRes.status} Y:${yRes.status}`);
-
-                        const xText = await xRes.text();
-                        const yText = await yRes.text();
-
-                        log("Parsing data...");
-
-                        // Robust Parsing Helper
-                        // Handles both Newline-separated and Comma-separated (single line) data
-                        const parseData = (text) => {
-                            if (!text) return [];
-                            // Replaces newlines with commas, then splits by comma
-                            // This effectively flattens any CSV/Column structure into a single sequence
-                            // Then filters for valid numbers
-                            return text.replace(/[\r\n]+/g, ',').split(',').map(s => parseFloat(s)).filter(n => !isNaN(n));
-                        };
-
-                        xData = parseData(xText);
-                        yData = parseData(yText);
-
-                        if (xData.length === 0 || yData.length === 0) {
-                            throw new Error("No valid numeric data found in files.");
+                        await updateStatus("Loading Plotly library...");
+                        const maxWait = 10000;
+                        const start = Date.now();
+                        while (typeof Plotly === 'undefined') {
+                            if (Date.now() - start > maxWait) throw new Error("Plotly library failed to load (timeout).");
+                            await new Promise(r => setTimeout(r, 200));
                         }
-
-                        log(`Data parsed. X: ${xData.length} pts, Y: ${yData.length} pts`);
-
-                        // Data Decimation for Performance (if huge)
-                        const MAX_POINTS = 10000;
-                        if (xData.length > MAX_POINTS) {
-                            const step = Math.ceil(xData.length / MAX_POINTS);
-                            xData = xData.filter((_, i) => i % step === 0);
-                            yData = yData.filter((_, i) => i % step === 0);
-                            log(`Decimated to ~${xData.length} points.`);
-                        }
-
-                    } catch (err) {
-                        console.error(err);
-                        if (loading) loading.innerHTML = `<i class="fas fa-exclamation-triangle"></i> Error: ${err.message}`;
-                        return;
                     }
-                } else {
-                    // Fallback Demo Data
-                    xData = [0, 1, 2, 3, 4, 5];
-                    yData = [10, 15, 13, 17, 20, 25];
-                }
 
-                // Plot Setup
-                if (document.getElementById(containerId)) {
-                    if (loading) loading.style.display = 'none';
+                    // 2. Configuration
+                    {% if page.plot_config %}
+                    const config = {
+                        xUrl: "{{ page.plot_config.x_file | relative_url }}",
+                        yUrl: "{{ page.plot_config.y_file | relative_url }}",
+                        xLabel: "{{ page.plot_config.x_label | default: 'Time (s)' }}",
+                        yLabel: "{{ page.plot_config.y_label | default: 'Value' }}",
+                    };
+                    {% else %}
+                    await updateStatus("No plot configuration found. Showing demo.");
+                    // Demo fallback
+                    renderPlot([1, 2, 3], [10, 15, 13], null);
+                    return;
+                    {% endif %}
 
-                    const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() || '#333';
-                    const secondaryColor = getComputedStyle(document.documentElement).getPropertyValue('--text-secondary').trim() || '#666';
-                    const borderColor = getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim() || '#ddd';
+                    // 3. Fetch Data
+                    await updateStatus(`Fetching data files...`);
+                    const [xRes, yRes] = await Promise.all([
+                        fetch(config.xUrl),
+                        fetch(config.yUrl)
+                    ]);
 
-                    const trace = {
-                        x: xData,
-                        y: yData,
-                        mode: 'lines',
-                        name: plotConfig ? plotConfig.y_label : 'Data',
-                        line: { width: 2, color: '#3b82f6' }
+                    if (!xRes.ok) throw new Error(`Failed to load X data (${xRes.status})`);
+                    if (!yRes.ok) throw new Error(`Failed to load Y data (${yRes.status})`);
+
+                    await updateStatus("Reading data streams...");
+                    const xRaw = await xRes.text();
+                    const yRaw = await yRes.text();
+
+                    // 4. Parsing
+                    await updateStatus("Parsing CSV data...");
+
+                    // Robust parser for flat CSVs (comma or newline separated)
+                    const parseNums = (str) => {
+                        if (!str) return [];
+                        // Replace newlines with commas, split by comma, trim, filter empty
+                        return str.replace(/[\r\n]+/g, ',')
+                            .split(',')
+                            .map(v => v.trim())
+                            .filter(v => v !== '')
+                            .map(Number)
+                            .filter(n => !isNaN(n));
                     };
 
-                    const layout = {
-                        paper_bgcolor: 'rgba(0,0,0,0)',
-                        plot_bgcolor: 'rgba(0,0,0,0)',
-                        font: { color: primaryColor },
-                        margin: { l: 50, r: 20, b: 50, t: 30 },
-                        xaxis: {
-                            title: plotConfig ? plotConfig.x_label : 'X',
-                            gridcolor: borderColor,
-                            zerolinecolor: borderColor,
-                            color: secondaryColor
-                        },
-                        yaxis: {
-                            title: plotConfig ? plotConfig.y_label : 'Y',
-                            gridcolor: borderColor,
-                            zerolinecolor: borderColor,
-                            color: secondaryColor
-                        },
-                        showlegend: true,
-                        legend: { orientation: 'h', y: -0.2 }
-                    };
+                    let xData = parseNums(xRaw);
+                    let yData = parseNums(yRaw);
 
-                    Plotly.newPlot(containerId, [trace], layout, { responsive: true, displayModeBar: false });
+                    await updateStatus(`Parsed: ${xData.length} pts (X), ${yData.length} pts (Y)`);
+
+                    if (xData.length === 0 || yData.length === 0) {
+                        throw new Error("Data files contained no valid numbers.");
+                    }
+
+                    // 5. Validation & Truncation
+                    if (xData.length !== yData.length) {
+                        const minLen = Math.min(xData.length, yData.length);
+                        console.warn(`[InteractivePlot] Length mismatch. X:${xData.length} Y:${yData.length}. Truncating to ${minLen}.`);
+                        xData = xData.slice(0, minLen);
+                        yData = yData.slice(0, minLen);
+                    }
+
+                    // 6. Decimation (for performance)
+                    const MAX_POINTS = 8000;
+                    if (xData.length > MAX_POINTS) {
+                        await updateStatus(`Decimating ${xData.length} points...`);
+                        const step = Math.ceil(xData.length / MAX_POINTS);
+                        xData = xData.filter((_, i) => i % step === 0);
+                        yData = yData.filter((_, i) => i % step === 0);
+                    }
+
+                    // 7. Render
+                    await updateStatus("Rendering chart...");
+                    renderPlot(xData, yData, config);
+
+                } catch (err) {
+                    console.error("[InteractivePlot] Error:", err);
+                    if (loadingEl) {
+                        loadingEl.innerHTML = `
+                            <div style="color: #ef4444; font-size: 2em; margin-bottom: 10px;"><i class="fas fa-exclamation-triangle"></i></div>
+                            <div style="color: var(--text-primary); font-weight: bold;">Visualization Error</div>
+                            <div style="color: var(--text-secondary); text-align: center; font-size: 0.9em; max-width: 300px;">
+                                ${err.message}
+                            </div>
+                        `;
+                    }
                 }
             }
 
-            // Run initialization
+            function renderPlot(x, y, config) {
+                const loadingEl = document.getElementById(loadingId);
+                const container = document.getElementById(containerId);
+
+                if (!container) return;
+
+                const trace = {
+                    x: x,
+                    y: y,
+                    type: 'scatter',
+                    mode: 'lines',
+                    line: { color: '#3b82f6', width: 2 }, // Tailwind blue-500
+                    fill: 'tozeroy',
+                    fillcolor: 'rgba(59, 130, 246, 0.1)'
+                };
+
+                const layout = {
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: getComputedStyle(document.body).getPropertyValue('--text-primary').trim() },
+                    margin: { l: 60, r: 20, t: 20, b: 60 },
+                    xaxis: {
+                        title: config ? config.xLabel : 'X',
+                        gridcolor: 'rgba(128,128,128,0.2)',
+                        zerolinecolor: 'rgba(128,128,128,0.2)'
+                    },
+                    yaxis: {
+                        title: config ? config.yLabel : 'Y',
+                        gridcolor: 'rgba(128,128,128,0.2)',
+                        zerolinecolor: 'rgba(128,128,128,0.2)'
+                    },
+                    showlegend: false
+                };
+
+                const plotConfig = { responsive: true, displayModeBar: false };
+
+                Plotly.newPlot(containerId, [trace], layout, plotConfig).then(() => {
+                    // Fade out loading screen
+                    if (loadingEl) {
+                        loadingEl.style.opacity = '0';
+                        setTimeout(() => loadingEl.style.display = 'none', 300);
+                    }
+                });
+            }
+
             if (document.readyState === 'loading') {
                 document.addEventListener('DOMContentLoaded', initPlot);
             } else {

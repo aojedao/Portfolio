@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Plot Tests</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body { font-family: Arial; margin: 20px; background: #f0f0f0; }
+        .test { background: white; padding: 20px; margin: 20px 0; border-radius: 8px; }
+        .plot { height: 400px; border: 1px solid #ccc; margin: 20px 0; }
+        .status { padding: 10px; margin: 10px 0; border-radius: 4px; font-weight: bold; }
+        .ok { background: #d4edda; color: #155724; }
+        .err { background: #f8d7da; color: #721c24; }
+        h1 { color: #333; }
+    </style>
+</head>
+<body>
+    <h1>Plot Parsing Tests</h1>
+    
+    <div class="test">
+        <h2>Test 1: Servos - Cartesian Path (Column-based CSV)</h2>
+        <div id="plot1" class="plot"></div>
+        <div id="status1" class="status">Loading...</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 2: Servos - Joint Angles (Multi-column CSV)</h2>
+        <div id="plot2" class="plot"></div>
+        <div id="status2" class="status">Loading...</div>
+    </div>
+
+    <div class="test">
+        <h2>Test 3: Ebarisbot - Torque Profile (Flat CSV)</h2>
+        <div id="plot3" class="plot"></div>
+        <div id="status3" class="status">Loading...</div>
+    </div>
+
+    <script>
+        const parseCSVFlat = (csvText) => {
+            if (!csvText) return [];
+            return csvText
+                .replace(/[\r\n]+/g, ',')
+                .split(',')
+                .map(v => v.trim())
+                .filter(v => v !== '')
+                .map(Number)
+                .filter(n => !isNaN(n));
+        };
+
+        const parseCSVColumns = (csvText) => {
+            if (!csvText) return [];
+            const lines = csvText.trim().split(/\r?\n/);
+            return lines.slice(1).map(line =>
+                line.split(',')
+                    .map(v => parseFloat(v.trim()))
+                    .filter(n => !isNaN(n))
+            );
+        };
+
+        const setStatus = (id, msg, type) => {
+            const el = document.getElementById(id);
+            el.className = `status ${type}`;
+            el.textContent = msg;
+        };
+
+        async function test1() {
+            try {
+                const res = await fetch('/assets/data/servos/robot_cartesian_path.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                
+                const cols = parseCSVColumns(text);
+                if (!cols.length) throw new Error("No rows parsed");
+                if (cols[0].length < 2) throw new Error("Missing columns");
+                
+                const xData = cols.map(row => row[0]);
+                const yData = cols.map(row => row[1]);
+                
+                Plotly.newPlot('plot1', [{
+                    x: xData,
+                    y: yData,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'End Effector Path'
+                }], {
+                    title: 'Cartesian Path (X vs Y)',
+                    xaxis: { title: 'X Position (m)' },
+                    yaxis: { title: 'Y Position (m)' },
+                    responsive: true
+                });
+                
+                setStatus('status1', `✓ Loaded ${xData.length} points`, 'ok');
+            } catch (err) {
+                setStatus('status1', `✗ ${err.message}`, 'err');
+                console.error('Test 1:', err);
+            }
+        }
+
+        async function test2() {
+            try {
+                const res = await fetch('/assets/data/servos/robot_joint_dynamics.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                
+                const cols = parseCSVColumns(text);
+                if (!cols.length) throw new Error("No rows parsed");
+                if (cols[0].length < 3) throw new Error("Missing columns");
+                
+                const timeData = cols.map(row => row[0]);
+                const theta1Data = cols.map(row => row[1]);
+                const theta2Data = cols.map(row => row[2]);
+                
+                const trace1 = {
+                    x: timeData,
+                    y: theta1Data,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Joint 1 Angle (Theta 1)'
+                };
+                
+                const trace2 = {
+                    x: timeData,
+                    y: theta2Data,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Joint 2 Angle (Theta 2)'
+                };
+                
+                Plotly.newPlot('plot2', [trace1, trace2], {
+                    title: 'Joint Angles Over Time',
+                    xaxis: { title: 'Time (s)' },
+                    yaxis: { title: 'Angle (rad)' },
+                    responsive: true,
+                    legend: { orientation: 'h', y: -0.15 }
+                });
+                
+                setStatus('status2', `✓ Loaded ${timeData.length} points for 2 angles`, 'ok');
+            } catch (err) {
+                setStatus('status2', `✗ ${err.message}`, 'err');
+                console.error('Test 2:', err);
+            }
+        }
+
+        async function test3() {
+            try {
+                const tRes = await fetch('/assets/schematics/ebarisbot/data/t.csv');
+                const torqueRes = await fetch('/assets/schematics/ebarisbot/data/Torque_profile2.csv');
+                
+                if (!tRes.ok) throw new Error(`Time file: HTTP ${tRes.status}`);
+                if (!torqueRes.ok) throw new Error(`Torque file: HTTP ${torqueRes.status}`);
+                
+                const tText = await tRes.text();
+                const torqueText = await torqueRes.text();
+                
+                let xValues = parseCSVFlat(tText);
+                let yValues = parseCSVFlat(torqueText);
+                
+                if (!xValues.length) throw new Error("Time data empty");
+                if (!yValues.length) throw new Error("Torque data empty");
+                
+                const minLen = Math.min(xValues.length, yValues.length);
+                xValues = xValues.slice(0, minLen);
+                yValues = yValues.slice(0, minLen);
+                
+                const MAX_POINTS = 8000;
+                if (xValues.length > MAX_POINTS) {
+                    const step = Math.ceil(xValues.length / MAX_POINTS);
+                    xValues = xValues.filter((_, i) => i % step === 0);
+                    yValues = yValues.filter((_, i) => i % step === 0);
+                }
+                
+                Plotly.newPlot('plot3', [{
+                    x: xValues,
+                    y: yValues,
+                    type: 'scatter',
+                    mode: 'lines',
+                    name: 'Motor Torque'
+                }], {
+                    title: 'Torque Profile Over Time',
+                    xaxis: { title: 'Time (s)' },
+                    yaxis: { title: 'Torque (Nm)' },
+                    responsive: true
+                });
+                
+                setStatus('status3', `✓ Loaded ${xValues.length} points (decimated from ${minLen})`, 'ok');
+            } catch (err) {
+                setStatus('status3', `✗ ${err.message}`, 'err');
+                console.error('Test 3:', err);
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            test1();
+            test2();
+            test3();
+        });
+    </script>
+</body>
+</html>

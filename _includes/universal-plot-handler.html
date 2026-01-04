@@ -1,8 +1,8 @@
 <!-- Universal Plot Handler - Robust CSV visualization using Plotly -->
-<div class="project-section-clean" id="universal-plots-container">
-    <h3>{{ page.plots_title | default: "Data Visualization" }}</h3>
+<div id="universal-plots-container">
+    <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); margin-bottom: var(--spacing-md);">{{ page.plots_title | default: "Data Visualization" }}</h3>
 
-    <div id="plots-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px;"></div>
+    <div id="plots-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px; width: 100%; margin: 20px 0;"></div>
 
     <script>
         (function () {
@@ -132,15 +132,18 @@
                     const xRes = await fetch(config.xFile);
                     if (!xRes.ok) throw new Error(`X file not found (${config.xFile})`);
                     const xRaw = await xRes.text();
-                    let xData = parseCSVFlat(xRaw);
+                    let xData = [];
 
+                    // Try column-based parsing first (for traditional CSV with headers)
+                    const xCols = parseCSVColumns(xRaw);
+                    const xColIdx = config.xColumn || 0;
+                    if (xCols.length > 0 && xCols[0].length > xColIdx) {
+                        xData = xCols.map(row => row[xColIdx]).filter(v => !isNaN(v));
+                    }
+
+                    // Fall back to flat parsing (for comma-separated values on single line)
                     if (xData.length === 0) {
-                        // Try column-based parsing
-                        const xCols = parseCSVColumns(xRaw);
-                        const colIdx = config.xColumn || 0;
-                        if (xCols.length > 0) {
-                            xData = xCols.map(row => row[colIdx]).filter(v => !isNaN(v));
-                        }
+                        xData = parseCSVFlat(xRaw);
                     }
 
                     if (xData.length === 0) {
@@ -155,14 +158,18 @@
                         const yRes = await fetch(yFileConfig.file);
                         if (!yRes.ok) throw new Error(`Y file not found (${yFileConfig.file})`);
                         const yRaw = await yRes.text();
-                        let yData = parseCSVFlat(yRaw);
+                        let yData = [];
 
+                        // Try column-based parsing first (for traditional CSV with headers)
+                        const yCols = parseCSVColumns(yRaw);
+                        const yColIdx = yFileConfig.column || 0;
+                        if (yCols.length > 0 && yCols[0].length > yColIdx) {
+                            yData = yCols.map(row => row[yColIdx]).filter(v => !isNaN(v));
+                        }
+
+                        // Fall back to flat parsing (for comma-separated values on single line)
                         if (yData.length === 0) {
-                            const yCols = parseCSVColumns(yRaw);
-                            const colIdx = yFileConfig.column || 0;
-                            if (yCols.length > 0) {
-                                yData = yCols.map(row => row[colIdx]).filter(v => !isNaN(v));
-                            }
+                            yData = parseCSVFlat(yRaw);
                         }
 
                         if (yData.length === 0) {

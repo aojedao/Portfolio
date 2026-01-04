@@ -77,6 +77,10 @@
         
         // Load all plots
         async function initPlots() {
+            console.log('[Plot Handler] Initializing plots...');
+            console.log('[Plot Handler] SITE_BASEURL:', window.SITE_BASEURL);
+            console.log('[Plot Handler] Number of plots:', plotConfigs.length);
+            
             if (!plotConfigs || plotConfigs.length === 0) {
                 document.getElementById('universal-plots-container').innerHTML = '<p style="color: #666;">No plots configured</p>';
                 return;
@@ -90,14 +94,16 @@
             const grid = document.getElementById('plots-grid');
             for (let i = 0; i < plotConfigs.length; i++) {
                 const config = plotConfigs[i];
+                console.log(`[Plot Handler] Loading plot ${i}:`, config.title);
                 const container = document.createElement('div');
                 container.id = config.id;
-                container.style.cssText = 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;';
+                container.style.cssText = 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--surface-color);';
                 grid.appendChild(container);
                 
                 try {
                     await renderPlot(config, container);
                 } catch (err) {
+                    console.error(`[Plot Handler] Error on plot ${i}:`, err);
                     container.innerHTML = '<div style="padding: 20px; color: red;">Error: ' + err.message + '</div>';
                 }
             }
@@ -105,15 +111,22 @@
         
         async function renderPlot(config, container) {
             try {
+                console.log(`[renderPlot] Starting for ${config.title}`);
+                console.log(`[renderPlot] X file: ${config.xFile}`);
+                
                 // Fetch X data - use resolvePath to add baseurl if needed
                 let xRes, xData = [];
                 try {
                     const xUrl = resolvePath(config.xFile);
+                    console.log(`[renderPlot] Resolved X URL: ${xUrl}`);
                     xRes = await fetch(xUrl);
                     if (!xRes.ok) {
                         throw new Error(`HTTP ${xRes.status}`);
                     }
-                    xData = getColumn(parseCSV(await xRes.text()), config.xColumn);
+                    const xText = await xRes.text();
+                    console.log(`[renderPlot] X data loaded, length: ${xText.length}`);
+                    xData = getColumn(parseCSV(xText), config.xColumn);
+                    console.log(`[renderPlot] X data parsed, ${xData.length} values`);
                 } catch (err) {
                     throw new Error(`Cannot load X: ${config.xFile} - ${err.message}`);
                 }
@@ -125,11 +138,15 @@
                 for (const yFile of config.yFiles) {
                     try {
                         const yUrl = resolvePath(yFile.file);
+                        console.log(`[renderPlot] Resolved Y URL: ${yUrl}`);
                         const yRes = await fetch(yUrl);
                         if (!yRes.ok) {
                             throw new Error(`HTTP ${yRes.status}`);
                         }
-                        const yData = getColumn(parseCSV(await yRes.text()), yFile.column);
+                        const yText = await yRes.text();
+                        console.log(`[renderPlot] Y data loaded, length: ${yText.length}`);
+                        const yData = getColumn(parseCSV(yText), yFile.column);
+                        console.log(`[renderPlot] Y data parsed, ${yData.length} values for ${yFile.label}`);
                         
                         if (yData.length > 0) {
                             const len = Math.min(xData.length, yData.length);
@@ -148,19 +165,24 @@
                 
                 if (traces.length === 0) throw new Error('No Y data could be loaded');
                 
+                console.log(`[renderPlot] Creating plot with ${traces.length} traces`);
                 const layout = {
                     title: config.title,
                     xaxis: { title: config.xLabel },
                     yaxis: { title: config.yLabel },
                     showlegend: traces.length > 1,
                     responsive: true,
-                    margin: { l: 60, r: 20, t: 40, b: 60 }
+                    margin: { l: 60, r: 20, t: 40, b: 60 },
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: 'inherit' }
                 };
                 
-                Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false });
+                Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: true });
+                console.log(`[renderPlot] Plot ${config.id} rendered successfully`);
             } catch (err) {
                 container.innerHTML = '<div style="padding: 20px; color: red; line-height: 1.6;"><strong>Plot Error:</strong><br/>' + err.message + '</div>';
-                console.error('[Plot Error]', err);
+                console.error('[renderPlot] Error:', err);
             }
         }
         

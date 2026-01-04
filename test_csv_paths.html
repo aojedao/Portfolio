@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test CSV Paths & Handler</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body { font-family: monospace; padding: 20px; background: #fafafa; }
+        .section { margin: 20px 0; }
+        h2 { border-bottom: 2px solid #333; padding-bottom: 10px; }
+        .result { margin: 10px 0; padding: 10px; border: 1px solid #ccc; background: white; }
+        .success { border-left: 4px solid #28a745; }
+        .error { border-left: 4px solid #dc3545; }
+        pre { overflow-x: auto; background: #f5f5f5; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>Testing Plot Handler</h1>
+    
+    <div class="section">
+        <h2>1. Testing CSV Paths</h2>
+        <div id="path-results"></div>
+    </div>
+
+    <div class="section">
+        <h2>2. Testing Handler Logic</h2>
+        <div id="plot-0" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+        <div id="plot-1" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+        <div id="plot-2" style="width: 100%; height: 400px; border: 1px solid #ddd; margin: 10px 0;"></div>
+    </div>
+
+    <script>
+        const pathsDiv = document.getElementById('path-results');
+
+        // Test all paths
+        const paths = [
+            '/assets/data/plots/ebarisbot/torque.csv',
+            '/assets/data/plots/servos/robot_cartesian_simple.csv',
+            '/assets/data/plots/servos/robot_joint_simple.csv'
+        ];
+
+        async function testPath(path) {
+            try {
+                const res = await fetch(path);
+                const status = res.ok ? 'OK' : `ERROR (${res.status})`;
+                const className = res.ok ? 'success' : 'error';
+                const text = await res.text();
+                const preview = text.split('\n').slice(0, 2).join(' | ');
+                pathsDiv.innerHTML += `<div class="result ${className}"><strong>${path}</strong><br/>Status: ${status}<br/><pre>${preview}</pre></div>`;
+            } catch (err) {
+                pathsDiv.innerHTML += `<div class="result error"><strong>${path}</strong><br/>Error: ${err.message}</div>`;
+            }
+        }
+
+        // Test paths first
+        paths.forEach(p => testPath(p));
+
+        // Then test handler
+        setTimeout(() => testHandler(), 500);
+
+        // CSV parsing function
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) return { headers: [], rows: [] };
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => {
+                    const num = parseFloat(v.trim());
+                    return isNaN(num) ? null : num;
+                });
+                rows.push(values);
+            }
+            return { headers, rows };
+        }
+
+        function getColumn(data, columnIndex) {
+            return data.rows.map(row => row[columnIndex]).filter(v => v !== null);
+        }
+
+        async function testHandler() {
+            if (typeof Plotly === 'undefined') {
+                document.getElementById('plot-0').innerHTML = '<div style="padding: 20px; color: red;">Plotly not loaded!</div>';
+                return;
+            }
+
+            const configs = [
+                {
+                    id: 'plot-0',
+                    title: 'Test: Cartesian Path',
+                    xFile: '/assets/data/plots/servos/robot_cartesian_simple.csv',
+                    xColumn: 0,
+                    yFiles: [{ file: '/assets/data/plots/servos/robot_cartesian_simple.csv', column: 1, label: 'Y' }]
+                },
+                {
+                    id: 'plot-1',
+                    title: 'Test: Joint Angles',
+                    xFile: '/assets/data/plots/servos/robot_joint_simple.csv',
+                    xColumn: 0,
+                    yFiles: [
+                        { file: '/assets/data/plots/servos/robot_joint_simple.csv', column: 1, label: 'Theta1' },
+                        { file: '/assets/data/plots/servos/robot_joint_simple.csv', column: 2, label: 'Theta2' }
+                    ]
+                },
+                {
+                    id: 'plot-2',
+                    title: 'Test: Torque',
+                    xFile: '/assets/data/plots/ebarisbot/torque.csv',
+                    xColumn: 0,
+                    yFiles: [{ file: '/assets/data/plots/ebarisbot/torque.csv', column: 1, label: 'Torque' }]
+                }
+            ];
+
+            for (const config of configs) {
+                try {
+                    const xRes = await fetch(config.xFile);
+                    if (!xRes.ok) throw new Error(`Cannot fetch ${config.xFile}: ${xRes.status}`);
+                    const xData = getColumn(parseCSV(await xRes.text()), config.xColumn);
+                    
+                    const traces = [];
+                    for (const yFile of config.yFiles) {
+                        const yRes = await fetch(yFile.file);
+                        if (!yRes.ok) throw new Error(`Cannot fetch ${yFile.file}: ${yRes.status}`);
+                        const yData = getColumn(parseCSV(await yRes.text()), yFile.column);
+                        
+                        if (yData.length > 0) {
+                            const len = Math.min(xData.length, yData.length);
+                            traces.push({
+                                x: xData.slice(0, len),
+                                y: yData.slice(0, len),
+                                mode: 'lines',
+                                name: yFile.label
+                            });
+                        }
+                    }
+                    
+                    const layout = {
+                        title: config.title,
+                        xaxis: { title: 'X' },
+                        yaxis: { title: 'Y' }
+                    };
+                    
+                    Plotly.newPlot(config.id, traces, layout, { responsive: true });
+                } catch (err) {
+                    document.getElementById(config.id).innerHTML = `<div style="padding: 20px; color: red;"><strong>Error:</strong> ${err.message}</div>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>

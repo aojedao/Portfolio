@@ -1,278 +1,148 @@
 <!-- Universal Plot Handler - Robust CSV visualization using Plotly -->
 <div id="universal-plots-container" style="width: 100%; padding: 0; margin: 20px 0;">
     <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); margin: 0 0 var(--spacing-md) 0;">{{ page.plots_title | default: "Data Visualization" }}</h3>
-
     <div id="plots-grid" style="width: 100%; margin: 0; padding: 0;"></div>
-
     <script>
-        (function () {
-            // ============ Configuration ============
-            {% if page.plots %}
-            const plotConfigs = [
-                {% for plot in page.plots %}
-                {
-                    id: "plot-{{ forloop.index0 }}",
-                    title: "{{ plot.title | default: 'Plot ' | append: forloop.index }}",
-                    xFile: "{{ plot.x_file | relative_url }}",
-                    xColumn: {{ plot.x_column | default: 0 }},
-                    yFiles: [
-                        {% for yfile in plot.y_files %}
-                        {
-                            file: "{{ yfile.file | relative_url }}",
-                            label: "{{ yfile.label | default: yfile.file | split: '/' | last }}",
-                            column: {{ yfile.column | default: 0 }}
-                        }
-                        {% endfor %}
-                    ],
-                    xLabel: "{{ plot.x_label | default: 'X' }}",
-                    yLabel: "{{ plot.y_label | default: 'Y' }}",
-                    type: "{{ plot.type | default: 'scatter' }}"
-                }
-                {% endfor %}
-            ];
-            {% elsif page.custom_plots %}
-            const plotConfigs = {{ page.custom_plots | jsonify }};
-            {% elsif page.plot_config %}
-            const plotConfigs = [{
-                id: "plot-0",
-                title: "{{ page.plot_title | default: 'Data Plot' }}",
-                xFile: "{{ page.plot_config.x_file | relative_url }}",
-                yFiles: [{
-                    file: "{{ page.plot_config.y_file | relative_url }}",
-                    label: "{{ page.plot_config.y_label | default: 'Data' }}"
-                }],
-                xLabel: "{{ page.plot_config.x_label | default: 'Time (s)' }}",
-                yLabel: "{{ page.plot_config.y_label | default: 'Value' }}",
-                type: "scatter"
-            }];
-            {% else %}
-            const plotConfigs = [];
-            {% endif %}
-
-            // ============ Utility Functions ============
-            const parseCSVFlat = (csvText) => {
-                if (!csvText) return [];
-                return csvText
-                    .replace(/[\r\n]+/g, ',')
-                    .split(',')
-                    .map(v => v.trim())
-                    .filter(v => v !== '' && !isNaN(parseFloat(v)))
-                    .map(Number);
-            };
-
-            const parseCSVColumns = (csvText) => {
-                if (!csvText) return [];
-                const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
-                if (lines.length < 2) return []; // Need at least header + 1 data row
-                
-                // Check if first line looks like a header (non-numeric values)
-                const firstLineParts = lines[0].split(',').map(v => v.trim());
-                const firstLineIsHeader = firstLineParts.some(v => isNaN(parseFloat(v)));
-                
-                const dataLines = firstLineIsHeader ? lines.slice(1) : lines;
-                return dataLines.map(line =>
-                    line.split(',')
-                        .map(v => {
-                            const num = parseFloat(v.trim());
-                            return isNaN(num) ? null : num;
-                        })
-                );
-            };
-
-            const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#6366f1'];
-            let colorIndex = 0;
-
-            const getNextColor = () => colors[colorIndex++ % colors.length];
-
-            // ============ Main Handler ============
-            async function initializeAllPlots() {
-                console.log("[UniversalPlotHandler] initializeAllPlots called, plotConfigs:", plotConfigs);
-                if (typeof Plotly === 'undefined') {
-                    console.error("[UniversalPlotHandler] Plotly not loaded!");
-                    document.getElementById('universal-plots-container').innerHTML =
-                        '<div style="color: #ef4444; padding: 20px;">Error: Plotly library failed to load</div>';
-                    return;
-                }
-
-                if (plotConfigs.length === 0) {
-                    document.getElementById('universal-plots-container').innerHTML =
-                        '<div style="color: var(--text-secondary); padding: 20px;">No plot configuration provided</div>';
-                    return;
-                }
-
-                const grid = document.getElementById('plots-grid');
-                grid.innerHTML = '';
-
-                for (let configIdx = 0; configIdx < plotConfigs.length; configIdx++) {
-                    const config = plotConfigs[configIdx];
-
-                    // Create container
-                    const container = document.createElement('div');
-                    container.id = config.id;
-                    container.style.cssText = `
-                        width: 100%;
-                        height: 400px;
-                        background: var(--surface-color);
-                        border-radius: var(--radius-lg);
-                        border: 1px solid var(--border-color);
-                        margin-bottom: 20px;
-                    `;
-                    grid.appendChild(container);
-
-                    // Load and render plot asynchronously
-                    loadAndRenderPlot(config, container);
-                }
+        window.universalPlotData = {};
+        
+        // Parse CSV with column headers
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) return { headers: [], rows: [] };
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => {
+                    const num = parseFloat(v.trim());
+                    return isNaN(num) ? null : num;
+                });
+                rows.push(values);
             }
-
-            async function loadAndRenderPlot(config, container) {
+            return { headers, rows };
+        }
+        
+        // Get column data
+        function getColumn(data, columnIndex) {
+            return data.rows.map(row => row[columnIndex]).filter(v => v !== null);
+        }
+        
+        // Build plot config
+        {% if page.plots %}
+        const plotConfigs = [
+            {% for plot in page.plots %}
+            {
+                id: "plot-{{ forloop.index0 }}",
+                title: "{{ plot.title }}",
+                xFile: "{{ plot.x_file }}",
+                xColumn: {{ plot.x_column | default: 0 }},
+                yFiles: [
+                    {% for yfile in plot.y_files %}
+                    {
+                        file: "{{ yfile.file }}",
+                        column: {{ yfile.column }},
+                        label: "{{ yfile.label }}"
+                    }
+                    {% if forloop.last == false %},{% endif %}
+                    {% endfor %}
+                ],
+                xLabel: "{{ plot.x_label }}",
+                yLabel: "{{ plot.y_label }}"
+            }
+            {% if forloop.last == false %},{% endif %}
+            {% endfor %}
+        ];
+        {% else %}
+        const plotConfigs = [];
+        {% endif %}
+        
+        const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'];
+        let colorIdx = 0;
+        function getColor() { return colors[colorIdx++ % colors.length]; }
+        
+        // Load all plots
+        async function initPlots() {
+            if (!plotConfigs || plotConfigs.length === 0) {
+                document.getElementById('universal-plots-container').innerHTML = '<p style="color: #666;">No plots configured</p>';
+                return;
+            }
+            
+            if (typeof Plotly === 'undefined') {
+                document.getElementById('universal-plots-container').innerHTML = '<p style="color: red;">Plotly not loaded</p>';
+                return;
+            }
+            
+            const grid = document.getElementById('plots-grid');
+            for (let i = 0; i < plotConfigs.length; i++) {
+                const config = plotConfigs[i];
+                const container = document.createElement('div');
+                container.id = config.id;
+                container.style.cssText = 'width: 100%; height: 400px; margin-bottom: 20px; border: 1px solid #ddd; border-radius: 8px;';
+                grid.appendChild(container);
+                
                 try {
-                    // Fetch X data
-                    const xRes = await fetch(config.xFile);
-                    if (!xRes.ok) throw new Error(`X file not found (${config.xFile})`);
-                    const xRaw = await xRes.text();
-                    let xData = [];
-
-                    // Try column-based parsing first (for traditional CSV with headers)
-                    const xCols = parseCSVColumns(xRaw);
-                    const xColIdx = config.xColumn || 0;
-                    if (xCols.length > 0) {
-                        xData = xCols
-                            .map(row => row[xColIdx])
-                            .filter(v => v !== null && !isNaN(v));
-                    }
-
-                    // Fall back to flat parsing (for comma-separated values on single line)
-                    if (xData.length === 0) {
-                        xData = parseCSVFlat(xRaw);
-                    }
-
-                    if (xData.length === 0) {
-                        throw new Error("X data file is empty or invalid format");
-                    }
-
-                    // Fetch Y data(s)
-                    const yDatasets = [];
-
-                    for (const yFileConfig of config.yFiles) {
-                        const yRes = await fetch(yFileConfig.file);
-                        if (!yRes.ok) throw new Error(`Y file not found (${yFileConfig.file})`);
-                        const yRaw = await yRes.text();
-                        let yData = [];
-
-                        // Try column-based parsing first (for traditional CSV with headers)
-                        const yCols = parseCSVColumns(yRaw);
-                        const yColIdx = yFileConfig.column || 0;
-                        if (yCols.length > 0) {
-                            yData = yCols
-                                .map(row => row[yColIdx])
-                                .filter(v => v !== null && !isNaN(v));
-                        }
-
-                        // Fall back to flat parsing (for comma-separated values on single line)
-                        if (yData.length === 0) {
-                            yData = parseCSVFlat(yRaw);
-                        }
-
-                        if (yData.length === 0) {
-                            console.warn(`[UniversalPlotHandler] Y dataset "${yFileConfig.label}" is empty`);
-                            continue;
-                        }
-
-                        yDatasets.push({
-                            label: yFileConfig.label,
-                            data: yData
-                        });
-                    }
-
-                    if (yDatasets.length === 0) {
-                        throw new Error("No valid Y data found");
-                    }
-
-                    // Validate lengths
-                    const minLen = Math.min(xData.length, Math.min(...yDatasets.map(d => d.data.length)));
-                    xData = xData.slice(0, minLen);
-                    yDatasets.forEach(d => d.data = d.data.slice(0, minLen));
-
-                    // Decimation for performance
-                    const MAX_POINTS = 8000;
-                    if (xData.length > MAX_POINTS) {
-                        const step = Math.ceil(xData.length / MAX_POINTS);
-                        xData = xData.filter((_, i) => i % step === 0);
-                        yDatasets.forEach(d => d.data = d.data.filter((_, i) => i % step === 0));
-                    }
-
-                    // Render
-                    renderPlot(config, xData, yDatasets, container);
-
+                    await renderPlot(config, container);
                 } catch (err) {
-                    console.error("[UniversalPlotHandler] Plot error:", err);
-                    container.innerHTML = `
-                        <div style="color: #ef4444; text-align: center; padding: 20px; line-height: 1.6;">
-                            <div style="font-weight: bold; font-size: 1.1em;">⚠ Plot Error</div>
-                            <div style="font-size: 0.9em; margin-top: 8px;">${err.message}</div>
-                        </div>
-                    `;
+                    container.innerHTML = '<div style="padding: 20px; color: red;">Error: ' + err.message + '</div>';
                 }
             }
-
-            function renderPlot(config, xData, yDatasets, container) {
-                const traces = yDatasets.map((dataset, idx) => ({
-                    x: xData,
-                    y: dataset.data,
-                    type: config.type || 'scatter',
-                    mode: 'lines',
-                    name: dataset.label,
-                    line: { color: getNextColor(), width: 2 },
-                    fill: yDatasets.length === 1 ? 'tozeroy' : undefined,
-                    fillcolor: yDatasets.length === 1 ? 'rgba(59, 130, 246, 0.1)' : undefined
-                }));
-
-                const layout = {
-                    title: config.title,
-                    paper_bgcolor: 'rgba(0,0,0,0)',
-                    plot_bgcolor: 'rgba(0,0,0,0)',
-                    font: {
-                        color: getComputedStyle(document.documentElement)
-                            .getPropertyValue('--text-primary').trim() || '#ffffff'
-                    },
-                    margin: { l: 60, r: 20, t: 40, b: 60 },
-                    xaxis: {
-                        title: config.xLabel,
-                        gridcolor: getComputedStyle(document.documentElement)
-                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)',
-                        zerolinecolor: getComputedStyle(document.documentElement)
-                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)'
-                    },
-                    yaxis: {
-                        title: config.yLabel,
-                        gridcolor: getComputedStyle(document.documentElement)
-                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)',
-                        zerolinecolor: getComputedStyle(document.documentElement)
-                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)'
-                    },
-                    showlegend: yDatasets.length > 1,
-                    legend: yDatasets.length > 1 ? { orientation: 'h', y: -0.2 } : undefined,
-                    responsive: true
-                };
-
-                Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false })
-                    .then(() => {
-                        // Plot rendered successfully
-                    })
-                    .catch(err => {
-                        console.error("[UniversalPlotHandler] Plotly.newPlot error:", err);
+        }
+        
+        async function renderPlot(config, container) {
+            // Fetch X data
+            const xRes = await fetch(config.xFile);
+            if (!xRes.ok) throw new Error('Cannot fetch ' + config.xFile);
+            const xData = getColumn(parseCSV(await xRes.text()), config.xColumn);
+            
+            if (xData.length === 0) throw new Error('X data empty');
+            
+            // Fetch Y data
+            const traces = [];
+            for (const yFile of config.yFiles) {
+                const yRes = await fetch(yFile.file);
+                if (!yRes.ok) throw new Error('Cannot fetch ' + yFile.file);
+                const yData = getColumn(parseCSV(await yRes.text()), yFile.column);
+                
+                if (yData.length > 0) {
+                    const len = Math.min(xData.length, yData.length);
+                    traces.push({
+                        x: xData.slice(0, len),
+                        y: yData.slice(0, len),
+                        mode: 'lines',
+                        name: yFile.label,
+                        line: { color: getColor(), width: 2 }
                     });
+                }
             }
-
-            // ============ Initialization ============
-            console.log("[UniversalPlotHandler] Script started, plotConfigs count:", plotConfigs.length);
-            if (document.readyState === 'loading') {
-                console.log("[UniversalPlotHandler] Document loading, attaching DOMContentLoaded listener");
-                document.addEventListener('DOMContentLoaded', initializeAllPlots);
+            
+            if (traces.length === 0) throw new Error('No Y data');
+            
+            const layout = {
+                title: config.title,
+                xaxis: { title: config.xLabel },
+                yaxis: { title: config.yLabel },
+                showlegend: traces.length > 1,
+                responsive: true,
+                margin: { l: 60, r: 20, t: 40, b: 60 }
+            };
+            
+            Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false });
+        }
+        
+        // Start when Plotly is ready
+        function checkPlotly() {
+            if (typeof Plotly !== 'undefined') {
+                initPlots();
             } else {
-                console.log("[UniversalPlotHandler] Document ready, initializing immediately");
-                initializeAllPlots();
+                setTimeout(checkPlotly, 100);
             }
-        })();
+        }
+        
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', checkPlotly);
+        } else {
+            checkPlotly();
+        }
     </script>
 </div>

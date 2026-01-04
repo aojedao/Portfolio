@@ -14,11 +14,13 @@
                     id: "plot-{{ forloop.index0 }}",
                     title: "{{ plot.title | default: 'Plot ' | append: forloop.index }}",
                     xFile: "{{ plot.x_file | relative_url }}",
+                    xColumn: {{ plot.x_column | default: 0 }},
                     yFiles: [
                         {% for yfile in plot.y_files %}
                         {
                             file: "{{ yfile.file | relative_url }}",
-                            label: "{{ yfile.label | default: yfile.file | split: '/' | last }}"
+                            label: "{{ yfile.label | default: yfile.file | split: '/' | last }}",
+                            column: {{ yfile.column | default: 0 }}
                         }
                         {% endfor %}
                     ],
@@ -62,7 +64,8 @@
             const parseCSVColumns = (csvText) => {
                 if (!csvText) return [];
                 const lines = csvText.trim().split(/\r?\n/);
-                return lines.map(line =>
+                // Skip header row and parse data rows
+                return lines.slice(1).map(line =>
                     line.split(',')
                         .map(v => parseFloat(v.trim()))
                         .filter(n => !isNaN(n))
@@ -134,7 +137,10 @@
                     if (xData.length === 0) {
                         // Try column-based parsing
                         const xCols = parseCSVColumns(xRaw);
-                        if (xCols.length > 0) xData = xCols[0];
+                        const colIdx = config.xColumn || 0;
+                        if (xCols.length > 0) {
+                            xData = xCols.map(row => row[colIdx]).filter(v => !isNaN(v));
+                        }
                     }
 
                     if (xData.length === 0) {
@@ -153,7 +159,10 @@
 
                         if (yData.length === 0) {
                             const yCols = parseCSVColumns(yRaw);
-                            if (yCols.length > 0) yData = yCols[0];
+                            const colIdx = yFileConfig.column || 0;
+                            if (yCols.length > 0) {
+                                yData = yCols.map(row => row[colIdx]).filter(v => !isNaN(v));
+                            }
                         }
 
                         if (yData.length === 0) {

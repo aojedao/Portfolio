@@ -52,7 +52,6 @@ plots:
     x_label: "Time (s)"
     y_label: "Torque (Nm)"
 custom_plot: "universal-plot-handler.html"
-  title: "Simulated Torque Profile"
 
 ---
 

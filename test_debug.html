@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plot Debug</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        body { font-family: monospace; margin: 20px; background: #1e1e1e; color: #00ff00; }
+        .debug { background: #2d2d2d; padding: 10px; margin: 10px 0; border: 1px solid #444; }
+        .ok { color: #00ff00; }
+        .err { color: #ff0000; }
+    </style>
+</head>
+<body>
+    <h1>Plot Loading Debug</h1>
+    <div id="debug"></div>
+    
+    <script>
+        const parseCSVFlat = (csvText) => {
+            if (!csvText) return [];
+            return csvText
+                .replace(/[\r\n]+/g, ',')
+                .split(',')
+                .map(v => v.trim())
+                .filter(v => v !== '')
+                .map(Number)
+                .filter(n => !isNaN(n));
+        };
+
+        const parseCSVColumns = (csvText) => {
+            if (!csvText) return [];
+            const lines = csvText.trim().split(/\r?\n/);
+            return lines.slice(1).map(line =>
+                line.split(',')
+                    .map(v => parseFloat(v.trim()))
+                    .filter(n => !isNaN(n))
+            );
+        };
+
+        const debug = (msg, type = 'ok') => {
+            const div = document.getElementById('debug');
+            const el = document.createElement('div');
+            el.className = `debug ${type}`;
+            el.textContent = msg;
+            div.appendChild(el);
+            console.log(msg);
+        };
+
+        async function runTests() {
+            // Test Plotly
+            if (typeof Plotly === 'undefined') {
+                debug('FAIL: Plotly not loaded', 'err');
+                return;
+            }
+            debug('OK: Plotly loaded');
+
+            // Test 1: Cartesian
+            try {
+                const res = await fetch('/assets/data/servos/robot_cartesian_path.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                debug(`OK: Fetched cartesian path (${text.length} bytes)`);
+                
+                const cols = parseCSVColumns(text);
+                debug(`OK: Parsed ${cols.length} rows`);
+                
+                if (cols.length > 0) {
+                    const xData = cols.map(row => row[0]);
+                    const yData = cols.map(row => row[1]);
+                    debug(`OK: X column has ${xData.length} values, range: [${Math.min(...xData)}, ${Math.max(...xData)}]`);
+                    debug(`OK: Y column has ${yData.length} values, range: [${Math.min(...yData)}, ${Math.max(...yData)}]`);
+                }
+            } catch (e) {
+                debug(`FAIL: Cartesian - ${e.message}`, 'err');
+            }
+
+            // Test 2: Joint Dynamics
+            try {
+                const res = await fetch('/assets/data/servos/robot_joint_dynamics.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                debug(`OK: Fetched joint dynamics (${text.length} bytes)`);
+                
+                const cols = parseCSVColumns(text);
+                debug(`OK: Parsed ${cols.length} rows with ${cols[0]?.length || 0} columns`);
+                
+                if (cols.length > 0) {
+                    const time = cols.map(row => row[0]);
+                    const theta1 = cols.map(row => row[1]);
+                    const theta2 = cols.map(row => row[2]);
+                    debug(`OK: Time range: [${Math.min(...time)}, ${Math.max(...time)}]`);
+                    debug(`OK: Theta1 range: [${Math.min(...theta1)}, ${Math.max(...theta1)}]`);
+                    debug(`OK: Theta2 range: [${Math.min(...theta2)}, ${Math.max(...theta2)}]`);
+                }
+            } catch (e) {
+                debug(`FAIL: Joint dynamics - ${e.message}`, 'err');
+            }
+
+            // Test 3: Ebarisbot Time
+            try {
+                const res = await fetch('/assets/schematics/ebarisbot/data/t.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                debug(`OK: Fetched ebarisbot time (${text.length} bytes, ${text.length / 1024 / 1024} MB)`);
+                
+                const values = parseCSVFlat(text);
+                debug(`OK: Parsed ${values.length} time values`);
+                
+                if (values.length > 0) {
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    debug(`OK: Time range: [${min}, ${max}]`);
+                    debug(`    First 3 values: ${values.slice(0, 3).join(', ')}`);
+                }
+            } catch (e) {
+                debug(`FAIL: Ebarisbot time - ${e.message}`, 'err');
+            }
+
+            // Test 4: Ebarisbot Torque
+            try {
+                const res = await fetch('/assets/schematics/ebarisbot/data/Torque_profile2.csv');
+                if (!res.ok) throw new Error(`HTTP ${res.status}`);
+                const text = await res.text();
+                debug(`OK: Fetched ebarisbot torque (${text.length} bytes, ${text.length / 1024 / 1024} MB)`);
+                
+                const values = parseCSVFlat(text);
+                debug(`OK: Parsed ${values.length} torque values`);
+                
+                if (values.length > 0) {
+                    const min = Math.min(...values);
+                    const max = Math.max(...values);
+                    debug(`OK: Torque range: [${min}, ${max}]`);
+                    debug(`    First 3 values: ${values.slice(0, 3).join(', ')}`);
+                }
+            } catch (e) {
+                debug(`FAIL: Ebarisbot torque - ${e.message}`, 'err');
+            }
+        }
+
+        document.addEventListener('DOMContentLoaded', runTests);
+    </script>
+</body>
+</html>

@@ -10,16 +10,23 @@ plots_title: "Data Visualization"
 plots:
   - title: "Cartesian Path (X vs Y)"
     x_file: "/assets/data/servos/robot_cartesian_path.csv"
+    x_column: 0
     y_files:
       - file: "/assets/data/servos/robot_cartesian_path.csv"
+        column: 1
         label: "End Effector Path"
     x_label: "X Position (m)"
     y_label: "Y Position (m)"
   - title: "Joint Angles Over Time"
     x_file: "/assets/data/servos/robot_joint_dynamics.csv"
+    x_column: 0
     y_files:
       - file: "/assets/data/servos/robot_joint_dynamics.csv"
-        label: "Joint Angles"
+        column: 1
+        label: "Joint 1 Angle (Theta 1)"
+      - file: "/assets/data/servos/robot_joint_dynamics.csv"
+        column: 2
+        label: "Joint 2 Angle (Theta 2)"
     x_label: "Time (s)"
     y_label: "Angle (rad)"
 custom_plot: "universal-plot-handler.html"

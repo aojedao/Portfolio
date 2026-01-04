@@ -6,7 +6,23 @@ featured_image: "/assets/images/projects/servos/mechanics_explorer.gif"
 description: "Implementation of inverse kinematics and trajectory planning for a 2-DOF planar robot arm to trace a complex geometric path, simulated in MATLAB/Simscape."
 category: "Robotics"
 tags: [MATLAB, Simscape, Inverse Kinematics, Robotics, Control Systems]
-custom_plot: "servos-plots.html"
+plots_title: "Data Visualization"
+plots:
+  - title: "Cartesian Path (X vs Y)"
+    x_file: "/assets/data/servos/robot_cartesian_path.csv"
+    y_files:
+      - file: "/assets/data/servos/robot_cartesian_path.csv"
+        label: "End Effector Path"
+    x_label: "X Position (m)"
+    y_label: "Y Position (m)"
+  - title: "Joint Angles Over Time"
+    x_file: "/assets/data/servos/robot_joint_dynamics.csv"
+    y_files:
+      - file: "/assets/data/servos/robot_joint_dynamics.csv"
+        label: "Joint Angles"
+    x_label: "Time (s)"
+    y_label: "Angle (rad)"
+custom_plot: "universal-plot-handler.html"
 models:
   - file: "/assets/models/servos/arm.gltf"
     description: "3D Model of the 2-DOF Arm"

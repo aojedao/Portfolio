@@ -1,0 +1,261 @@
+<!-- Universal Plot Handler - Robust CSV visualization using Plotly -->
+<div class="project-section-clean" id="universal-plots-container">
+    <h3>{{ page.plots_title | default: "Data Visualization" }}</h3>
+
+    <div id="plots-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(500px, 1fr)); gap: 20px;"></div>
+
+    <script>
+        (function () {
+            // ============ Configuration ============
+            {% if page.plots %}
+            const plotConfigs = [
+                {% for plot in page.plots %}
+                {
+                    id: "plot-{{ forloop.index0 }}",
+                    title: "{{ plot.title | default: 'Plot ' | append: forloop.index }}",
+                    xFile: "{{ plot.x_file | relative_url }}",
+                    yFiles: [
+                        {% for yfile in plot.y_files %}
+                        {
+                            file: "{{ yfile.file | relative_url }}",
+                            label: "{{ yfile.label | default: yfile.file | split: '/' | last }}"
+                        }
+                        {% endfor %}
+                    ],
+                    xLabel: "{{ plot.x_label | default: 'X' }}",
+                    yLabel: "{{ plot.y_label | default: 'Y' }}",
+                    type: "{{ plot.type | default: 'scatter' }}"
+                }
+                {% endfor %}
+            ];
+            {% elsif page.custom_plots %}
+            const plotConfigs = {{ page.custom_plots | jsonify }};
+            {% elsif page.plot_config %}
+            const plotConfigs = [{
+                id: "plot-0",
+                title: "{{ page.plot_title | default: 'Data Plot' }}",
+                xFile: "{{ page.plot_config.x_file | relative_url }}",
+                yFiles: [{
+                    file: "{{ page.plot_config.y_file | relative_url }}",
+                    label: "{{ page.plot_config.y_label | default: 'Data' }}"
+                }],
+                xLabel: "{{ page.plot_config.x_label | default: 'Time (s)' }}",
+                yLabel: "{{ page.plot_config.y_label | default: 'Value' }}",
+                type: "scatter"
+            }];
+            {% else %}
+            const plotConfigs = [];
+            {% endif %}
+
+            // ============ Utility Functions ============
+            const parseCSVFlat = (csvText) => {
+                if (!csvText) return [];
+                return csvText
+                    .replace(/[\r\n]+/g, ',')
+                    .split(',')
+                    .map(v => v.trim())
+                    .filter(v => v !== '')
+                    .map(Number)
+                    .filter(n => !isNaN(n));
+            };
+
+            const parseCSVColumns = (csvText) => {
+                if (!csvText) return [];
+                const lines = csvText.trim().split(/\r?\n/);
+                return lines.map(line =>
+                    line.split(',')
+                        .map(v => parseFloat(v.trim()))
+                        .filter(n => !isNaN(n))
+                );
+            };
+
+            const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#6366f1'];
+            let colorIndex = 0;
+
+            const getNextColor = () => colors[colorIndex++ % colors.length];
+
+            // ============ Main Handler ============
+            async function initializeAllPlots() {
+                if (typeof Plotly === 'undefined') {
+                    console.error("[UniversalPlotHandler] Plotly not loaded!");
+                    document.getElementById('universal-plots-container').innerHTML =
+                        '<div style="color: #ef4444; padding: 20px;">Error: Plotly library failed to load</div>';
+                    return;
+                }
+
+                if (plotConfigs.length === 0) {
+                    document.getElementById('universal-plots-container').innerHTML =
+                        '<div style="color: var(--text-secondary); padding: 20px;">No plot configuration provided</div>';
+                    return;
+                }
+
+                const grid = document.getElementById('plots-grid');
+                grid.innerHTML = '';
+
+                for (let configIdx = 0; configIdx < plotConfigs.length; configIdx++) {
+                    const config = plotConfigs[configIdx];
+
+                    // Create container
+                    const container = document.createElement('div');
+                    container.id = config.id;
+                    container.style.cssText = `
+                        height: 400px;
+                        background: var(--surface-color);
+                        border-radius: var(--radius-lg);
+                        border: 1px solid var(--border-color);
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        flex-direction: column;
+                        position: relative;
+                    `;
+
+                    const status = document.createElement('div');
+                    status.className = 'plot-status';
+                    status.style.cssText = 'color: var(--text-secondary); text-align: center;';
+                    status.innerText = 'Loading...';
+                    container.appendChild(status);
+                    grid.appendChild(container);
+
+                    // Load and render plot asynchronously
+                    loadAndRenderPlot(config, container, status);
+                }
+            }
+
+            async function loadAndRenderPlot(config, container, statusEl) {
+                try {
+                    // Fetch X data
+                    statusEl.innerText = 'Fetching data...';
+                    const xRes = await fetch(config.xFile);
+                    if (!xRes.ok) throw new Error(`X file not found (${config.xFile})`);
+                    const xRaw = await xRes.text();
+                    let xData = parseCSVFlat(xRaw);
+
+                    if (xData.length === 0) {
+                        // Try column-based parsing
+                        const xCols = parseCSVColumns(xRaw);
+                        if (xCols.length > 0) xData = xCols[0];
+                    }
+
+                    if (xData.length === 0) {
+                        throw new Error("X data file is empty or invalid format");
+                    }
+
+                    // Fetch Y data(s)
+                    statusEl.innerText = 'Processing data...';
+                    const yDatasets = [];
+
+                    for (const yFileConfig of config.yFiles) {
+                        const yRes = await fetch(yFileConfig.file);
+                        if (!yRes.ok) throw new Error(`Y file not found (${yFileConfig.file})`);
+                        const yRaw = await yRes.text();
+                        let yData = parseCSVFlat(yRaw);
+
+                        if (yData.length === 0) {
+                            const yCols = parseCSVColumns(yRaw);
+                            if (yCols.length > 0) yData = yCols[0];
+                        }
+
+                        if (yData.length === 0) {
+                            console.warn(`[UniversalPlotHandler] Y dataset "${yFileConfig.label}" is empty`);
+                            continue;
+                        }
+
+                        yDatasets.push({
+                            label: yFileConfig.label,
+                            data: yData
+                        });
+                    }
+
+                    if (yDatasets.length === 0) {
+                        throw new Error("No valid Y data found");
+                    }
+
+                    // Validate lengths
+                    const minLen = Math.min(xData.length, Math.min(...yDatasets.map(d => d.data.length)));
+                    xData = xData.slice(0, minLen);
+                    yDatasets.forEach(d => d.data = d.data.slice(0, minLen));
+
+                    // Decimation for performance
+                    const MAX_POINTS = 8000;
+                    if (xData.length > MAX_POINTS) {
+                        const step = Math.ceil(xData.length / MAX_POINTS);
+                        xData = xData.filter((_, i) => i % step === 0);
+                        yDatasets.forEach(d => d.data = d.data.filter((_, i) => i % step === 0));
+                    }
+
+                    // Render
+                    statusEl.innerText = 'Rendering...';
+                    renderPlot(config, xData, yDatasets, container, statusEl);
+
+                } catch (err) {
+                    console.error("[UniversalPlotHandler] Plot error:", err);
+                    statusEl.innerText = '';
+                    statusEl.parentElement.innerHTML = `
+                        <div style="color: #ef4444; text-align: center; padding: 20px;">
+                            <div style="font-weight: bold;">⚠ Plot Error</div>
+                            <div style="font-size: 0.85em; margin-top: 8px; max-width: 300px;">${err.message}</div>
+                        </div>
+                    `;
+                }
+            }
+
+            function renderPlot(config, xData, yDatasets, container, statusEl) {
+                const traces = yDatasets.map((dataset, idx) => ({
+                    x: xData,
+                    y: dataset.data,
+                    type: config.type || 'scatter',
+                    mode: 'lines',
+                    name: dataset.label,
+                    line: { color: getNextColor(), width: 2 },
+                    fill: yDatasets.length === 1 ? 'tozeroy' : undefined,
+                    fillcolor: yDatasets.length === 1 ? 'rgba(59, 130, 246, 0.1)' : undefined
+                }));
+
+                const layout = {
+                    title: config.title,
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: {
+                        color: getComputedStyle(document.documentElement)
+                            .getPropertyValue('--text-primary').trim() || '#ffffff'
+                    },
+                    margin: { l: 60, r: 20, t: 40, b: 60 },
+                    xaxis: {
+                        title: config.xLabel,
+                        gridcolor: getComputedStyle(document.documentElement)
+                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)',
+                        zerolinecolor: getComputedStyle(document.documentElement)
+                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)'
+                    },
+                    yaxis: {
+                        title: config.yLabel,
+                        gridcolor: getComputedStyle(document.documentElement)
+                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)',
+                        zerolinecolor: getComputedStyle(document.documentElement)
+                            .getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)'
+                    },
+                    showlegend: yDatasets.length > 1,
+                    legend: yDatasets.length > 1 ? { orientation: 'h', y: -0.2 } : undefined,
+                    responsive: true
+                };
+
+                Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false })
+                    .then(() => {
+                        statusEl.parentElement.removeChild(statusEl);
+                    })
+                    .catch(err => {
+                        console.error("[UniversalPlotHandler] Plotly.newPlot error:", err);
+                        statusEl.innerText = 'Rendering failed';
+                    });
+            }
+
+            // ============ Initialization ============
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initializeAllPlots);
+            } else {
+                initializeAllPlots();
+            }
+        })();
+    </script>
+</div>

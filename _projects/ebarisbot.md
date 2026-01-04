@@ -42,12 +42,16 @@ gallery:
   - file: "/assets/images/projects/ebarisbot/VelProfInicial.png"
     description: "Initial Velocity Profile"
 
-interactive_plot: true
-plot_config:
-  x_file: "/assets/schematics/ebarisbot/data/t.csv"
-  y_file: "/assets/schematics/ebarisbot/data/Torque_profile2.csv"
-  x_label: "Time (s)"
-  y_label: "Torque (Nm)"
+plots_title: "Performance Analysis"
+plots:
+  - title: "Torque Profile Over Time"
+    x_file: "/assets/schematics/ebarisbot/data/t.csv"
+    y_files:
+      - file: "/assets/schematics/ebarisbot/data/Torque_profile2.csv"
+        label: "Motor Torque"
+    x_label: "Time (s)"
+    y_label: "Torque (Nm)"
+custom_plot: "universal-plot-handler.html"
   title: "Simulated Torque Profile"
 
 ---

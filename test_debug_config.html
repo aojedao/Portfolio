@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Check</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+</head>
+<body>
+    <h1>Debug</h1>
+    <pre id="log"></pre>
+
+    <script>
+        const log = (msg) => {
+            const el = document.getElementById('log');
+            el.textContent += msg + '\n';
+            console.log(msg);
+        };
+
+        log('1. Plotly available: ' + (typeof Plotly !== 'undefined'));
+        log('2. Document ready: ' + (document.readyState));
+
+        const pageData = {
+            plots: [
+                {
+                    title: "Test",
+                    x_file: "/assets/schematics/ebarisbot/data/torque.csv",
+                    x_column: 0,
+                    y_files: [{
+                        file: "/assets/schematics/ebarisbot/data/torque.csv",
+                        column: 1,
+                        label: "Test"
+                    }],
+                    x_label: "X",
+                    y_label: "Y"
+                }
+            ]
+        };
+
+        const plotConfigs = pageData.plots.map((plot, idx) => ({
+            id: "plot-" + idx,
+            title: plot.title,
+            xFile: plot.x_file,
+            xColumn: plot.x_column || 0,
+            yFiles: plot.y_files.map(y => ({
+                file: y.file,
+                column: y.column || 0,
+                label: y.label
+            })),
+            xLabel: plot.x_label,
+            yLabel: plot.y_label,
+            type: 'scatter'
+        }));
+
+        log('3. PlotConfigs: ' + JSON.stringify(plotConfigs, null, 2));
+        log('4. Configs length: ' + plotConfigs.length);
+    </script>
+</body>
+</html>

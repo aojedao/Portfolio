@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <title>Test Handler</title>
+    <script src="https://cdn.plot.ly/plotly-2.26.0.min.js"></script>
+    <style>
+        :root {
+            --text-primary: #1a1a1a;
+            --text-secondary: #666;
+            --text-muted: #999;
+            --surface-color: #f5f5f5;
+            --border-color: #ddd;
+            --radius-lg: 8px;
+            --spacing-sm: 8px;
+            --spacing-md: 16px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            padding: 20px;
+            background: #fafafa;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Handler Test - Servos Project</h1>
+        <div id="universal-plots-container" style="width: 100%; padding: 0; margin: 20px 0;">
+            <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); margin: 0 0 var(--spacing-md) 0;">Data Visualization</h3>
+            <div id="plots-grid" style="width: 100%; margin: 0; padding: 0;"></div>
+            <script>
+                (function () {
+                    const plotConfigs = [
+                        {
+                            id: "plot-0",
+                            title: "Cartesian Path (X vs Y)",
+                            xFile: "/assets/data/servos/robot_cartesian_simple.csv",
+                            xColumn: 0,
+                            yFiles: [
+                                {
+                                    file: "/assets/data/servos/robot_cartesian_simple.csv",
+                                    label: "End Effector Path",
+                                    column: 1
+                                }
+                            ],
+                            xLabel: "X Position (m)",
+                            yLabel: "Y Position (m)",
+                            type: "scatter"
+                        },
+                        {
+                            id: "plot-1",
+                            title: "Joint Angles Over Time",
+                            xFile: "/assets/data/servos/robot_joint_simple.csv",
+                            xColumn: 0,
+                            yFiles: [
+                                {
+                                    file: "/assets/data/servos/robot_joint_simple.csv",
+                                    label: "Joint 1 Angle (Theta 1)",
+                                    column: 1
+                                },
+                                {
+                                    file: "/assets/data/servos/robot_joint_simple.csv",
+                                    label: "Joint 2 Angle (Theta 2)",
+                                    column: 2
+                                }
+                            ],
+                            xLabel: "Time (s)",
+                            yLabel: "Angle (rad)",
+                            type: "scatter"
+                        }
+                    ];
+
+                    const parseCSVFlat = (csvText) => {
+                        if (!csvText) return [];
+                        return csvText
+                            .replace(/[\r\n]+/g, ',')
+                            .split(',')
+                            .map(v => v.trim())
+                            .filter(v => v !== '' && !isNaN(parseFloat(v)))
+                            .map(Number);
+                    };
+
+                    const parseCSVColumns = (csvText) => {
+                        if (!csvText) return [];
+                        const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
+                        if (lines.length < 2) return [];
+                        
+                        const firstLineParts = lines[0].split(',').map(v => v.trim());
+                        const firstLineIsHeader = firstLineParts.some(v => isNaN(parseFloat(v)));
+                        
+                        const dataLines = firstLineIsHeader ? lines.slice(1) : lines;
+                        return dataLines.map(line =>
+                            line.split(',')
+                                .map(v => {
+                                    const num = parseFloat(v.trim());
+                                    return isNaN(num) ? null : num;
+                                })
+                        );
+                    };
+
+                    const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899', '#6366f1'];
+                    let colorIndex = 0;
+                    const getNextColor = () => colors[colorIndex++ % colors.length];
+
+                    async function initializeAllPlots() {
+                        console.log("[Test] Initializing plots...");
+                        if (typeof Plotly === 'undefined') {
+                            console.error("[Test] Plotly not loaded!");
+                            document.getElementById('universal-plots-container').innerHTML =
+                                '<div style="color: #ef4444; padding: 20px;">Error: Plotly library failed to load</div>';
+                            return;
+                        }
+
+                        console.log("[Test] Plotly loaded. Config count:", plotConfigs.length);
+                        if (plotConfigs.length === 0) {
+                            document.getElementById('universal-plots-container').innerHTML =
+                                '<div style="color: var(--text-secondary); padding: 20px;">No plot configuration provided</div>';
+                            return;
+                        }
+
+                        const grid = document.getElementById('plots-grid');
+                        grid.innerHTML = '';
+
+                        for (let configIdx = 0; configIdx < plotConfigs.length; configIdx++) {
+                            const config = plotConfigs[configIdx];
+                            console.log(`[Test] Creating plot ${configIdx}:`, config.title);
+
+                            const container = document.createElement('div');
+                            container.id = config.id;
+                            container.style.cssText = `
+                                width: 100%;
+                                height: 400px;
+                                background: var(--surface-color);
+                                border-radius: var(--radius-lg);
+                                border: 1px solid var(--border-color);
+                                margin-bottom: 20px;
+                            `;
+                            grid.appendChild(container);
+
+                            loadAndRenderPlot(config, container);
+                        }
+                    }
+
+                    async function loadAndRenderPlot(config, container) {
+                        try {
+                            console.log(`[Test] Loading X data from: ${config.xFile}`);
+                            const xRes = await fetch(config.xFile);
+                            if (!xRes.ok) throw new Error(`X file not found (${config.xFile})`);
+                            const xRaw = await xRes.text();
+                            let xData = [];
+
+                            const xCols = parseCSVColumns(xRaw);
+                            const xColIdx = config.xColumn || 0;
+                            if (xCols.length > 0) {
+                                xData = xCols
+                                    .map(row => row[xColIdx])
+                                    .filter(v => v !== null && !isNaN(v));
+                            }
+
+                            if (xData.length === 0) {
+                                xData = parseCSVFlat(xRaw);
+                            }
+
+                            if (xData.length === 0) {
+                                throw new Error("X data file is empty or invalid format");
+                            }
+
+                            console.log(`[Test] X data loaded: ${xData.length} points`);
+
+                            const yDatasets = [];
+
+                            for (const yFileConfig of config.yFiles) {
+                                console.log(`[Test] Loading Y data from: ${yFileConfig.file}, column ${yFileConfig.column}`);
+                                const yRes = await fetch(yFileConfig.file);
+                                if (!yRes.ok) throw new Error(`Y file not found (${yFileConfig.file})`);
+                                const yRaw = await yRes.text();
+                                let yData = [];
+
+                                const yCols = parseCSVColumns(yRaw);
+                                const yColIdx = yFileConfig.column || 0;
+                                if (yCols.length > 0) {
+                                    yData = yCols
+                                        .map(row => row[yColIdx])
+                                        .filter(v => v !== null && !isNaN(v));
+                                }
+
+                                if (yData.length === 0) {
+                                    yData = parseCSVFlat(yRaw);
+                                }
+
+                                if (yData.length === 0) {
+                                    console.warn(`[Test] Y dataset "${yFileConfig.label}" is empty`);
+                                    continue;
+                                }
+
+                                console.log(`[Test] Y data loaded: ${yData.length} points`);
+                                yDatasets.push({
+                                    label: yFileConfig.label,
+                                    data: yData
+                                });
+                            }
+
+                            if (yDatasets.length === 0) {
+                                throw new Error("No valid Y data found");
+                            }
+
+                            const minLen = Math.min(xData.length, Math.min(...yDatasets.map(d => d.data.length)));
+                            xData = xData.slice(0, minLen);
+                            yDatasets.forEach(d => d.data = d.data.slice(0, minLen));
+
+                            console.log(`[Test] Rendering plot with ${minLen} points`);
+                            renderPlot(config, xData, yDatasets, container);
+
+                        } catch (err) {
+                            console.error("[Test] Plot error:", err);
+                            container.innerHTML = `
+                                <div style="color: #ef4444; text-align: center; padding: 20px; line-height: 1.6;">
+                                    <div style="font-weight: bold; font-size: 1.1em;">⚠ Plot Error</div>
+                                    <div style="font-size: 0.9em; margin-top: 8px;">${err.message}</div>
+                                </div>
+                            `;
+                        }
+                    }
+
+                    function renderPlot(config, xData, yDatasets, container) {
+                        console.log(`[Test] Creating traces for ${yDatasets.length} datasets`);
+                        const traces = yDatasets.map((dataset, idx) => ({
+                            x: xData,
+                            y: dataset.data,
+                            type: config.type || 'scatter',
+                            mode: 'lines',
+                            name: dataset.label,
+                            line: { color: getNextColor(), width: 2 },
+                            fill: yDatasets.length === 1 ? 'tozeroy' : undefined,
+                            fillcolor: yDatasets.length === 1 ? 'rgba(59, 130, 246, 0.1)' : undefined
+                        }));
+
+                        const layout = {
+                            title: config.title,
+                            paper_bgcolor: 'rgba(0,0,0,0)',
+                            plot_bgcolor: 'rgba(0,0,0,0)',
+                            font: { color: '#1a1a1a' },
+                            margin: { l: 60, r: 20, t: 40, b: 60 },
+                            xaxis: {
+                                title: config.xLabel,
+                                gridcolor: 'rgba(128,128,128,0.2)',
+                                zerolinecolor: 'rgba(128,128,128,0.2)'
+                            },
+                            yaxis: {
+                                title: config.yLabel,
+                                gridcolor: 'rgba(128,128,128,0.2)',
+                                zerolinecolor: 'rgba(128,128,128,0.2)'
+                            },
+                            showlegend: yDatasets.length > 1,
+                            legend: yDatasets.length > 1 ? { orientation: 'h', y: -0.2 } : undefined,
+                            responsive: true
+                        };
+
+                        console.log(`[Test] Calling Plotly.newPlot on container ${config.id}`);
+                        Plotly.newPlot(config.id, traces, layout, { responsive: true, displayModeBar: false })
+                            .then(() => {
+                                console.log(`[Test] Plot ${config.id} rendered successfully`);
+                            })
+                            .catch(err => {
+                                console.error("[Test] Plotly.newPlot error:", err);
+                            });
+                    }
+
+                    console.log("[Test] Document ready state:", document.readyState);
+                    if (document.readyState === 'loading') {
+                        document.addEventListener('DOMContentLoaded', initializeAllPlots);
+                    } else {
+                        initializeAllPlots();
+                    }
+                })();
+            </script>
+        </div>
+    </div>
+</body>
+</html>

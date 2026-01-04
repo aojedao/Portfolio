@@ -5,109 +5,143 @@
     <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px;">
         <!-- Cartesian Path Plot -->
         <div id="cartesian-plot"
-            style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+            style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center;">
+            <div class="plot-status" style="color: var(--text-secondary);">Waiting for data...</div>
         </div>
 
         <!-- Joint Dynamics Plot -->
         <div id="joint-plot"
-            style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color);">
+            style="height: 400px; background: var(--surface-color); border-radius: var(--radius-lg); border: 1px solid var(--border-color); display: flex; justify-content: center; align-items: center;">
+            <div class="plot-status" style="color: var(--text-secondary);">Waiting for data...</div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', async function () {
-            if (typeof Plotly === 'undefined') return;
-
-            const commonLayout = {
-                paper_bgcolor: 'rgba(0,0,0,0)',
-                plot_bgcolor: 'rgba(0,0,0,0)',
-                font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() },
-                showlegend: true,
-                legend: { orientation: 'h', y: -0.2 },
-                margin: { l: 50, r: 20, b: 50, t: 30 },
-                xaxis: {
-                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
-                },
-                yaxis: {
-                    gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
-                    zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+        (function () {
+            async function initServosPlots() {
+                // Wait for Plotly if needed
+                if (typeof Plotly === 'undefined') {
+                    await new Promise(r => setTimeout(r, 500));
+                    if (typeof Plotly === 'undefined') {
+                        console.error("ServosPlots: Plotly not found.");
+                        document.querySelectorAll('.plot-status').forEach(el => el.innerText = "Error: Plotly not loaded.");
+                        return;
+                    }
                 }
-            };
 
-            // Load and Plot Cartesian Path
-            try {
-                const response = await fetch("{{ '/assets/data/servos/robot_cartesian_path.csv' | relative_url }}");
-                const text = await response.text();
-                // Robust parsing: split by newlines, then by comma, filtering out empty/whitespace
-                const rows = text.trim().split(/\r?\n/).slice(1);
-                const x = [], y = [];
+                const commonLayout = {
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary').trim() },
+                    showlegend: true,
+                    legend: { orientation: 'h', y: -0.2 },
+                    margin: { l: 50, r: 20, b: 50, t: 30 },
+                    xaxis: {
+                        gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                        zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+                    },
+                    yaxis: {
+                        gridcolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim(),
+                        zerolinecolor: getComputedStyle(document.documentElement).getPropertyValue('--border-color').trim()
+                    }
+                };
 
-                rows.forEach(row => {
-                    const parts = row.split(',');
-                    if (parts.length >= 2) {
-                        const valX = parseFloat(parts[0]);
-                        const valY = parseFloat(parts[1]);
-                        if (!isNaN(valX) && !isNaN(valY)) {
-                            x.push(valX);
-                            y.push(valY);
+                // ---- Plot 1: Cartesian Path ----
+                try {
+                    const el = document.getElementById('cartesian-plot');
+                    if (el) el.querySelector('.plot-status').innerText = "Fetching Path Data...";
+
+                    const response = await fetch("{{ '/assets/data/servos/robot_cartesian_path.csv' | relative_url }}");
+                    if (!response.ok) throw new Error("File not found: " + response.status);
+
+                    const text = await response.text();
+                    // Column-based CSV: Header + Rows
+                    const rows = text.trim().split(/\r?\n/);
+                    const x = [], y = [];
+
+                    // Start from 1 to skip header
+                    for (let i = 1; i < rows.length; i++) {
+                        const parts = rows[i].split(',');
+                        if (parts.length >= 2) {
+                            const valX = parseFloat(parts[0]);
+                            const valY = parseFloat(parts[1]);
+                            if (!isNaN(valX) && !isNaN(valY)) {
+                                x.push(valX);
+                                y.push(valY);
+                            }
                         }
                     }
-                });
 
-                if (x.length > 0) {
-                    Plotly.newPlot('cartesian-plot', [{
-                        x: x, y: y, mode: 'lines', name: 'End Effector Path',
-                        line: { color: '#3b82f6', width: 2 }
-                    }], {
-                        ...commonLayout,
-                        title: 'Cartesian Path (X vs Y)',
-                        xaxis: { ...commonLayout.xaxis, title: 'X Position (m)' },
-                        yaxis: { ...commonLayout.yaxis, title: 'Y Position (m)', scaleanchor: "x" }
-                    }, { responsive: true, displayModeBar: false });
-                } else {
-                    console.warn("Servos Plot: No valid X/Y data parsed.");
+                    if (x.length > 0) {
+                        Plotly.newPlot('cartesian-plot', [{
+                            x: x, y: y, mode: 'lines', name: 'End Effector Path',
+                            line: { color: '#3b82f6', width: 2 }
+                        }], {
+                            ...commonLayout,
+                            title: 'Cartesian Path (X vs Y)',
+                            xaxis: { ...commonLayout.xaxis, title: 'X Position (m)' },
+                            yaxis: { ...commonLayout.yaxis, title: 'Y Position (m)', scaleanchor: "x" }
+                        }, { responsive: true, displayModeBar: false });
+                    } else {
+                        if (el && el.querySelector('.plot-status')) el.querySelector('.plot-status').innerText = "No valid data parsed.";
+                    }
+                } catch (e) {
+                    console.error('Servos Cartesian Error:', e);
+                    const el = document.getElementById('cartesian-plot');
+                    if (el && el.querySelector('.plot-status')) el.querySelector('.plot-status').innerText = "Error: " + e.message;
                 }
 
-            } catch (e) { console.error('Error plotting cartesian path:', e); }
+                // ---- Plot 2: Joint Dynamics ----
+                try {
+                    const el = document.getElementById('joint-plot');
+                    if (el) el.querySelector('.plot-status').innerText = "Fetching Joint Data...";
 
-            // Load and Plot Joint Dynamics
-            try {
-                const response = await fetch("{{ '/assets/data/servos/robot_joint_dynamics.csv' | relative_url }}");
-                const text = await response.text();
-                const rows = text.trim().split(/\r?\n/).slice(1);
-                const t = [], th1 = [], th2 = [];
+                    const response = await fetch("{{ '/assets/data/servos/robot_joint_dynamics.csv' | relative_url }}");
+                    if (!response.ok) throw new Error("File not found: " + response.status);
 
-                rows.forEach(row => {
-                    const parts = row.split(',');
-                    if (parts.length >= 3) {
-                        const valT = parseFloat(parts[0]);
-                        const valTh1 = parseFloat(parts[1]);
-                        const valTh2 = parseFloat(parts[2]);
+                    const text = await response.text();
+                    const rows = text.trim().split(/\r?\n/);
+                    const t = [], th1 = [], th2 = [];
 
-                        if (!isNaN(valT) && !isNaN(valTh1) && !isNaN(valTh2)) {
-                            t.push(valT);
-                            th1.push(valTh1);
-                            th2.push(valTh2);
+                    for (let i = 1; i < rows.length; i++) {
+                        const parts = rows[i].split(',');
+                        if (parts.length >= 3) {
+                            const valT = parseFloat(parts[0]);
+                            const valTh1 = parseFloat(parts[1]);
+                            const valTh2 = parseFloat(parts[2]);
+                            if (!isNaN(valT)) {
+                                t.push(valT);
+                                th1.push(valTh1);
+                                th2.push(valTh2);
+                            }
                         }
                     }
-                });
 
-                if (t.length > 0) {
-                    Plotly.newPlot('joint-plot', [
-                        { x: t, y: th1, mode: 'lines', name: 'Theta 1', line: { color: '#10b981' } },
-                        { x: t, y: th2, mode: 'lines', name: 'Theta 2', line: { color: '#ef4444' } }
-                    ], {
-                        ...commonLayout,
-                        title: 'Joint Angles Over Time',
-                        xaxis: { ...commonLayout.xaxis, title: 'Time (s)' },
-                        yaxis: { ...commonLayout.yaxis, title: 'Angle (rad)' }
-                    }, { responsive: true, displayModeBar: false });
-                } else {
-                    console.warn("Servos Plot: No valid Joint data parsed.");
+                    if (t.length > 0) {
+                        Plotly.newPlot('joint-plot', [
+                            { x: t, y: th1, mode: 'lines', name: 'Theta 1', line: { color: '#10b981' } },
+                            { x: t, y: th2, mode: 'lines', name: 'Theta 2', line: { color: '#ef4444' } }
+                        ], {
+                            ...commonLayout,
+                            title: 'Joint Angles Over Time',
+                            xaxis: { ...commonLayout.xaxis, title: 'Time (s)' },
+                            yaxis: { ...commonLayout.yaxis, title: 'Angle (rad)' }
+                        }, { responsive: true, displayModeBar: false });
+                    } else {
+                        if (el && el.querySelector('.plot-status')) el.querySelector('.plot-status').innerText = "No valid data parsed.";
+                    }
+                } catch (e) {
+                    console.error('Servos Joint Error:', e);
+                    const el = document.getElementById('joint-plot');
+                    if (el && el.querySelector('.plot-status')) el.querySelector('.plot-status').innerText = "Error: " + e.message;
                 }
+            }
 
-            } catch (e) { console.error('Error plotting joint dynamics:', e); }
-        });
+            if (document.readyState === 'loading') {
+                document.addEventListener('DOMContentLoaded', initServosPlots);
+            } else {
+                initServosPlots();
+            }
+        })();
     </script>
 </div>

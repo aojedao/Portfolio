@@ -14,10 +14,8 @@ demo_url: ""
 tags: [CNC, GRBL, Arduino, Stepper Motors, CAD, g-code, Precision Machining]
 
 models:
-  - file: "/assets/models/pcb-mill/CNC v34.f3z"
+  - file: "/assets/models/pcb-mill/CNC.gltf"
     description: "Complete CNC machine 3D CAD model (Fusion 360 format)"
-  - file: "/assets/models/pcb-mill/CNC_3dmodel.3mf"
-    description: "3D printable components assembly"
 
 schematics:
   - file: "/assets/schematics/pcb-mill/Proyecto_Sensores.pdf"

@@ -1,8 +1,8 @@
 ---
 layout: project
-title: "Hykabaï: Autonomous Mobile Manipulator Robot"
-subtitle: "Multi-degree of Freedom Mobile Robot for Warehouse Automation and Research"
-description: "A sophisticated autonomous mobile platform with integrated robotic arm capabilities, equipped with ROS integration, vision systems, and real-time control for industrial automation and research applications."
+title: "Hykabaï: Autonomous Mobile Robot"
+subtitle: "Autonomous Platform for Navigation and Research"
+description: "An advanced autonomous mobile robot platform equipped with ROS integration, vision systems, and real-time control for autonomous navigation research and indoor robotics applications."
 date: 2023-06-15
 author: "Alejandro Ojeda Olarte"
 institution: "Microfactory Lab"
@@ -14,10 +14,8 @@ demo_url: ""
 tags: [ROS, BeagleBone Blue, Computer Vision, Motion Control, Python, C++, Autonomous Navigation]
 
 models:
-  - file: "/assets/models/hykabai/PI3_Hykabai v3.3mf"
-    description: "Complete Hykabaï robot assembly 3D model"
-  - file: "/assets/models/hykabai/MicroRobot v28.f3z"
-    description: "Detailed CAD model with mechanical subsystems"
+  - file: ""
+    description: "3D models not currently available"
 
 schematics:
   - file: "/assets/schematics/hykabai/BasicFunctionalDiagram.drawio.svg"
@@ -29,57 +27,39 @@ gallery:
   - file: "/assets/images/projects/hykabai/MicroRobot v112.png"
     description: "Hykabaï robot CAD rendering - latest design iteration"
   - file: "/assets/images/projects/hykabai/MicroRobot v11.png"
-    description: "Robot platform overview with manipulator"
+    description: "Robot platform overview"
   - file: "/assets/images/projects/hykabai/MicroRobot.stl.jpg"
     description: "3D model visualization of chassis assembly"
   - file: "/assets/images/projects/hykabai/IMG_20230223_171227730.jpg"
     description: "Physical prototype in laboratory environment"
   - file: "/assets/images/projects/hykabai/IMG_20230223_171233261.jpg"
-    description: "Close-up of manipulation mechanism"
-  - file: "/assets/images/projects/hykabai/IMG_20230223_171249112.jpg"
     description: "Sensor integration and mounting detail"
+  - file: "/assets/images/projects/hykabai/IMG_20230223_171249112.jpg"
+    description: "Prototype testing and evaluation"
   - file: "/assets/images/projects/hykabai/IMG_20230223_171258490.jpg"
-    description: "Motion test and trajectory execution"
+    description: "Motion test and navigation"
   - file: "/assets/images/projects/hykabai/IMG_20230223_171313647.jpg"
     description: "Autonomous navigation demonstration"
   - file: "/assets/images/projects/hykabai/IMG_20230223_171319537.jpg"
-    description: "Environmental interaction capability"
+    description: "Platform capabilities in environment"
   - file: "/assets/images/projects/hykabai/Photo from Darkjediornot (2).jpg"
     description: "Action shot during autonomous operation"
   - file: "/assets/images/projects/hykabai/Photo from Darkjediornot.jpg"
     description: "Navigation in unstructured environment"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-10-20 at 11.06.39 AM.jpeg"
-    description: "Team demonstration photo"
   - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-10-21 at 2.59.36 PM.jpeg"
     description: "Real-world deployment scenario"
   - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (1).jpeg"
-    description: "Robot with payload demonstration"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (2).jpeg"
-    description: "Collaboration with research team"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (3).jpeg"
-    description: "Environmental mapping session"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (4).jpeg"
-    description: "Sensor calibration procedure"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (5).jpeg"
-    description: "Gripper actuation test"
-  - file: "/assets/images/projects/hykabai/WhatsApp Image 2022-08-31 at 8.14.57 PM (6).jpeg"
-    description: "Navigation path execution"
+    description: "Robot platform demonstration"
   - file: "/assets/images/projects/hykabai/SquareTrajectory.gif"
     description: "Motion trajectory execution animation"
-  - file: "/assets/images/projects/hykabai/giffcongreso.gif"
-    description: "Conference demonstration animation"
   - file: "/assets/images/projects/hykabai/encodersequence.gif"
     description: "Encoder signal sequence visualization"
   - file: "/assets/images/projects/hykabai/MicroRobot v14 (1).gif"
     description: "3D model animation of robot movement"
   - file: "/assets/images/projects/hykabai/ModulesDiagram.png"
     description: "System Module Architecture"
-  - file: "/assets/images/projects/hykabai/ModuleArchitecture.png"
-    description: "Detailed Module Interaction Diagram"
   - file: "/assets/images/projects/hykabai/NetworkingDiagram.png"
     description: "ROS Network Topology"
-  - file: "/assets/images/projects/hykabai/NetworkingFront.png"
-    description: "Network Communication Protocol"
   - file: "/assets/images/projects/hykabai/TableDiagram.png"
     description: "Kinematic Parameter Table"
   - file: "/assets/images/projects/hykabai/3DTableDiagram.png"
@@ -106,12 +86,6 @@ gallery:
     description: "Low-Pass Filter Test Results"
   - file: "/assets/images/projects/hykabai/SDVrosmachine.png"
     description: "ROS State Machine Diagram"
-  - file: "/assets/images/projects/hykabai/LegalFrameWork.png"
-    description: "Project Legal and Regulatory Framework"
-  - file: "/assets/images/projects/hykabai/Outreach.png"
-    description: "Community Outreach Activities"
-  - file: "/assets/images/projects/hykabai/Scalability.png"
-    description: "System Scalability Analysis"
   - file: "/assets/images/projects/hykabai/MindMap.png"
     description: "Project Mind Map and Structure"
   - file: "/assets/images/projects/hykabai/AlgorithmSoftwareFunction.svg"
@@ -122,12 +96,6 @@ gallery:
     description: "KPI Values and Benchmarks"
   - file: "/assets/images/projects/hykabai/SlickGantt.png"
     description: "Project Timeline and Gantt Chart"
-  - file: "/assets/images/projects/hykabai/Blueprint-background.png"
-    description: "Blueprint Style Documentation Background"
-  - file: "/assets/images/projects/hykabai/ElViejo.jpg"
-    description: "Historical reference and evolution"
-  - file: "/assets/images/projects/hykabai/Cyt.jpg"
-    description: "Component Testing Session"
 
 plots_title: "Performance Metrics & Analysis"
 
@@ -135,7 +103,7 @@ plots_title: "Performance Metrics & Analysis"
 
 ## Project Overview
 
-**Hykabaï** is a cutting-edge autonomous mobile manipulator platform engineered for research, prototyping, and industrial automation applications. The system integrates advanced motion control, real-time operating systems (ROS), computer vision, and sophisticated sensor fusion algorithms to create a versatile robotic platform capable of autonomous navigation and object manipulation.
+**Hykabaï** is an advanced autonomous mobile robot platform engineered for research and autonomous navigation applications. The system integrates real-time motion control, ROS (Robot Operating System), computer vision, and sophisticated sensor fusion algorithms to create a versatile robotic platform capable of autonomous navigation and environmental perception.
 
 ### Key Innovation Areas
 
@@ -144,7 +112,7 @@ plots_title: "Performance Metrics & Analysis"
 3. **Modular Architecture**: Plug-and-play hardware and software modules
 4. **ROS Integration**: Full Robot Operating System ecosystem compatibility
 5. **Computer Vision**: Integration with RGB-D cameras and LIDAR sensors
-6. **Machine Learning**: Trainable perception and decision-making systems
+6. **Sensor Fusion**: Multi-sensor fusion for robust localization and mapping
 
 ## System Architecture
 
@@ -272,26 +240,6 @@ Demonstrated capabilities:
 | **Response Time** | ~100 ms |
 | **Battery Life** | 2-4 hours (typical) |
 
-## Manipulator System
-
-### Arm Specifications
-
-**Degrees of Freedom**: 3-6 DOF (configuration-dependent)
-
-**Typical Configuration**:
-- **Base Rotation**: ±180° (continuous)
-- **Shoulder**: ±90° range
-- **Elbow**: ±120° range
-- **Wrist**: ±90° pan + tilt
-- **Gripper**: Parallel jaw (0-50mm opening)
-
-### Actuation
-
-- **Motor Type**: Servo motors (HS-5086WP equivalent)
-- **Control**: PWM servo signals from BeagleBone Blue
-- **Synchronization**: Real-time ROS middleware
-- **Force Feedback**: Optional strain gauge integration
-
 ## Autonomous Features
 
 ### Navigation Algorithms
@@ -327,14 +275,6 @@ Testing in structured indoor environment (5m × 5m):
 - **Stochastic Error**: < 2cm standard deviation
 - **Loop Closure**: < 10cm position error after 50m circuit
 
-### Manipulation Tasks
-
-Demonstrated pick-and-place operations:
-- Object mass: 0.1 - 0.5 kg
-- Positioning repeatability: ±3 cm
-- Task cycle time: 5-8 seconds
-- Success rate: > 95%
-
 ### Power Consumption
 
 Battery capacity: 5 Ah @ 12V (60 Wh nominal)
@@ -343,65 +283,37 @@ Battery capacity: 5 Ah @ 12V (60 Wh nominal)
 |-----------|------------|----------|
 | Idle/Standby | 0.2 A | Continuous |
 | Navigation | 2-3 A | 2-3 hours |
-| Manipulation | 3-5 A | 1-2 hours |
-| Full Load | 6-8 A | 30-45 min |
+| Active Sensing | 2.5-4 A | 1.5-2.5 hours |
 
 ## Software Development Kit
 
-### Key Libraries
+### ROS Packages and Architecture
 
-```python
-# ROS-based motion control
-from hykabaï_nav import PathPlanner, MotionController
+The Hykabaï platform is built on standard ROS packages for navigation and perception:
 
-# Vision processing
-from hykabaï_vision import ObjectDetector, PoseEstimator
+**Navigation Stack**:
+- `move_base`: Navigation framework for autonomous movement
+- `gmapping`: SLAM implementation using Rao-Blackwellized particle filters
+- `amcl`: Adaptive Monte Carlo localization for map-based navigation
+- `dwa_local_planner`: Dynamic Window Approach for local collision avoidance
 
-# Control and dynamics
-from hykabaï_control import MotorDriver, OdometryFilter
+**Vision Processing**:
+- `image_transport`: Efficient image streaming across ROS network
+- `opencv_ros`: Computer vision pipeline integration
+- `depth_image_proc`: Depth image processing from RGB-D sensors
 
-# Utilities
-from hykabaï_utils import ConfigManager, Logger
-```
+**Control and Monitoring**:
+- Custom motor control nodes running on BeagleBone Blue
+- Battery monitoring and power management nodes
+- Sensor aggregation and odometry computation
 
-### Example: Autonomous Pickup Task
+### Key Integration Points
 
-```python
-#!/usr/bin/env python
-import rospy
-from hykabaï_nav import Navigator
-from hykabaï_vision import ObjectDetector
-from hykabaï_control import Manipulator
-
-def main():
-    rospy.init_node('autonomous_pickup')
-    
-    # Initialize subsystems
-    nav = Navigator()
-    vision = ObjectDetector('weights/yolo_custom.weights')
-    arm = Manipulator()
-    
-    # Detect target
-    target = vision.detect_object('bottle')
-    
-    # Navigate to target
-    nav.plan_path(target.position)
-    nav.execute_path()
-    
-    # Grasp object
-    arm.move_to_target(target)
-    arm.grasp()
-    
-    # Return to depot
-    nav.plan_path([0, 0])  # Home position
-    nav.execute_path()
-    
-    # Place object
-    arm.place_object()
-
-if __name__ == '__main__':
-    main()
-```
+The platform integrates with standard ROS tools for development:
+- **ROS Master**: Centralized communication hub for all nodes
+- **TF (Transform) Framework**: Multi-dimensional transformation support
+- **rViz**: Real-time visualization of sensor data and navigation state
+- **ROS Bag**: Recording and playback of sensor data for offline analysis
 
 ## Design Evolution
 
@@ -419,48 +331,51 @@ Current version **v28** (CAD) and **v3** (Physical) represent production-ready c
 
 ### Research Domains
 
-- Autonomous robotics algorithms
-- Multi-robot coordination
-- Human-robot interaction
-- Computer vision and AI
-- Robot learning from demonstration
+- Autonomous robotics and navigation algorithms
+- SLAM and sensor fusion techniques
+- Computer vision and object detection
+- Robot learning and adaptive control
+- Human-robot interaction and social robotics
+- Multi-robot coordination and swarms
 
-### Industrial Applications
+### Practical Applications
 
-- Warehouse automation and inventory management
-- Parts bin picking and sorting
-- Quality inspection with mobile platforms
-- Flexible manufacturing systems
-- Small parts assembly
+- Indoor autonomous navigation research
+- Mobile platform sensor integration testing
+- Autonomous mapping and exploration
+- Sensor data collection and analysis
+- Mobile robot algorithm development and validation
 
 ## Future Enhancements
 
 **Planned Improvements**:
-1. Upgraded manipulator (6+ DOF redundant arm)
-2. Advanced gripper with force feedback
-3. Multi-sensor fusion (LiDAR + camera + thermal)
-4. Swarm robotics capability for multi-robot teams
-5. Deep learning-based end-to-end control
-6. Reinforcement learning for task optimization
-7. Extended battery life with hybrid power system
-8. Modular payload interface for mission-specific tools
+1. Enhanced sensor suite (multimodal LIDAR, thermal imaging)
+2. Improved SLAM algorithms with loop closure optimization
+3. Advanced computer vision for dynamic object tracking
+4. Deep learning-based end-to-end navigation
+5. Reinforcement learning for task optimization
+6. Extended battery life with hybrid power systems
+7. ROS 2.0 migration for improved performance
+8. Distributed computing with additional compute nodes
+9. Advanced obstacle avoidance in crowded environments
+10. Real-time performance monitoring and self-diagnostics
 
 ## Technical Specifications Summary
 
 | Category | Specification |
 |----------|---------------|
-| **Platform** | Differential-drive mobile robot |
+| **Platform** | Differential-drive autonomous mobile robot |
 | **Compute** | BeagleBone Blue + optional Raspberry Pi |
 | **ROS Version** | ROS Melodic/Noetic compatible |
 | **Drive Motors** | 1:50 reduction gearmotors (20D) |
 | **Maximum Speed** | 0.5 m/s |
 | **Positioning Error** | ±5 cm |
-| **Sensor Suite** | Encoders, optional LIDAR, optional RGB-D |
+| **Sensor Suite** | Encoders, optional LIDAR, optional RGB-D camera |
 | **Communication** | WiFi, Bluetooth, Ethernet |
 | **Power Source** | 5 Ah LiPo battery (12V nominal) |
 | **Operating Time** | 2-4 hours (motion dependent) |
 | **Dimensions** | 300 × 250 × 400 mm |
-| **Weight** | 4-6 kg (without arm) |
+| **Weight** | 3-4 kg |
 | **Development** | Python, C++, ROS |
 
 ---

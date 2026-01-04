@@ -45,9 +45,9 @@ gallery:
 plots_title: "Performance Analysis"
 plots:
   - title: "Torque Profile Over Time"
-    x_file: "/assets/schematics/ebarisbot/data/t.csv"
+    x_file: "/assets/schematics/ebarisbot/data/t_simple.csv"
     y_files:
-      - file: "/assets/schematics/ebarisbot/data/Torque_profile2.csv"
+      - file: "/assets/schematics/ebarisbot/data/Torque_simple.csv"
         label: "Motor Torque"
     x_label: "Time (s)"
     y_label: "Torque (Nm)"

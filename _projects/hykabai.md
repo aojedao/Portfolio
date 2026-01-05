@@ -8,7 +8,7 @@ author: "Alejandro Ojeda Olarte"
 institution: "Microfactory Lab"
 categories: [Robotics, Autonomous Systems, Machine Learning, Computer Vision, Control Systems]
 difficulty: Advanced
-featured_image: "/assets/images/projects/hykabai/MicroRobot v112.png"
+featured_image: "/assets/images/projects/hykabai/Cuadrado.gif"
 github_url: ""
 demo_url: ""
 tags: [ROS, BeagleBone Blue, Computer Vision, Motion Control, Python, C++, Autonomous Navigation]
@@ -24,6 +24,10 @@ schematics:
     description: "Electrical and Control System Schematics"
 
 gallery:
+  - file: "/assets/images/projects/hykabai/Cuadrado.gif"
+    description: "Square trajectory execution animation"
+  - file: "/assets/images/projects/hykabai/Hexagono.gif"
+    description: "Hexagonal trajectory execution animation"
   - file: "/assets/images/projects/hykabai/MicroRobot v112.png"
     description: "Hykabaï robot CAD rendering - latest design iteration"
   - file: "/assets/images/projects/hykabai/MicroRobot v11.png"
@@ -66,8 +70,6 @@ gallery:
     description: "Kinematic Parameter Table"
   - file: "/assets/images/projects/hykabai/3DTableDiagram.png"
     description: "3D Workspace Visualization"
-  - file: "/assets/images/projects/hykabai/BBBlue.png"
-    description: "BeagleBone Blue Computing Platform"
   - file: "/assets/images/projects/hykabai/bbbluecomponents.png"
     description: "BeagleBone Blue Component Breakdown"
   - file: "/assets/images/projects/hykabai/rpi3.png"

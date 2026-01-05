@@ -8,7 +8,7 @@ author: "Alejandro Ojeda Olarte"
 institution: "Microfactory Lab"
 categories: [CNC, Manufacturing, Precision Engineering, Automation]
 difficulty: Advanced
-featured_image: "/assets/images/projects/pcb-mill/manufactura1.jpg"
+featured_image: "/assets/images/projects/pcb-mill/main.gif"
 github_url: ""
 demo_url: ""
 tags: [CNC, GRBL, Arduino, Stepper Motors, CAD, g-code, Precision Machining]
@@ -22,6 +22,8 @@ schematics:
     description: "Sensor Integration and Electrical System Design"
 
 gallery:
+  - file: "/assets/images/projects/pcb-mill/main.gif"
+    description: "PCB Mill main operation demonstration"
   - file: "/assets/images/projects/pcb-mill/manufactura1.jpg"
     description: "PCB Mill in operation - drilling process"
   - file: "/assets/images/projects/pcb-mill/manufactura2.jpg"

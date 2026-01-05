@@ -56,6 +56,8 @@ gallery:
     description: "Encoder signal sequence visualization"
   - file: "/assets/images/projects/hykabai/MicroRobot v14 (1).gif"
     description: "3D model animation of robot movement"
+  - file: "/assets/images/projects/hykabai/VID_20220704_201357151.gif"
+    description: "Robot navigation and motion demonstration"
   - file: "/assets/images/projects/hykabai/ModulesDiagram.png"
     description: "System Module Architecture"
   - file: "/assets/images/projects/hykabai/NetworkingDiagram.png"

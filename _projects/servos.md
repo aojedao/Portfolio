@@ -53,6 +53,8 @@ gallery:
     description: "Joint 2 Velocity profile"
   - file: "/assets/images/projects/servos/LogicAnalyzer.png"
     description: "Control Logic Analysis"
+  - file: "/assets/images/projects/servos/VID-20220112-WA0015.gif"
+    description: "Robot arm motion demonstration and testing"
 ---
 
 ## Project Overview

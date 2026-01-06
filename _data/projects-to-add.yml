@@ -65,7 +65,7 @@ projects:
     md_file: "_projects/electrical-panel-star-delta.md"
     notes: "UNAL Diseño Mecatrónico. Complete star-delta motor starter panel with 3D GLTF model, control/power schematics, BOM. Components: ABB contactors, Schneider enclosure, Legrand controls."
     
-  - id: 4
+  - id: 5
     description: "Basic drawing project"
     technologies: ["drawing", "design"]
     status: "not-started"
@@ -74,7 +74,7 @@ projects:
     local_path: "UNKNOWN - needs to be located"
     notes: "Location needs to be determined"
     
-  - id: 4
+  - id: 6
     title: "Finitos"
     description: "Finite elements project"
     technologies: ["ANSYS", "finite elements", "simulation"]
@@ -83,17 +83,17 @@ projects:
     date_added: "2025-12-31"
     notes: "Has ANSYS file, but software not available"
     
-  - id: 5
+  - id: 7
     title: "Control"
     description: "Control systems project"
     technologies: ["MATLAB", "Simulink", "control systems"]
-    status: "not-started"
+    status: "completed"
     priority: "medium"
     date_added: "2025-12-31"
     local_path: "F:\\Desktop\\Control"
     notes: "Needs MATLAB installed to run simulation file"
     
-  - id: 6
+  - id: 8
     title: "MesoMicro"
     description: "Meso and micro scale project"
     technologies: ["materials", "microscopy", "analysis"]
@@ -102,3 +102,73 @@ projects:
     date_added: "2025-12-31"
     local_path: "DriveBackup(G):\\Desktop\\MesoMicro"
     notes: "All materials ready - can be added to portfolio"
+
+  - id: 9
+    title: "XWings and the dron stuff"
+    description: "Drone related projects including XWings"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 10
+    title: "FoR"
+    description: "Fundamentals of Robotics (FoR) projects"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 11
+    title: "Mechatronics"
+    description: "Mechatronics course projects and labs"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 12
+    title: "Advanced Mechatronics"
+    description: "Advanced Mechatronics course projects"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 13
+    title: "Swarm"
+    description: "Swarm robotics projects"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 14
+    title: "ARPL"
+    description: "Agile Robotics and Perception Lab (ARPL) research"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 15
+    title: "Space Robotics"
+    description: "Space exploration and robotics projects"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 16
+    title: "GRAIL"
+    description: "General Robotics, Automation, and Integrated Learning (GRAIL) lab projects"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 17
+    title: "LeRobot Hackathons"
+    description: "Projects and participation in LeRobot hackathon events"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"
+
+  - id: 18
+    title: "Environmental Sensor at DIMA"
+    description: "Environmental monitoring system development at DIMA"
+    status: "not-started"
+    priority: "medium"
+    date_added: "2026-01-06"

@@ -16,10 +16,16 @@ models:
     description: "Capacitive soil moisture sensor module"
   - file: "/assets/models/mechatronics/Light Sensor.glb"
     description: "Light/ambient sensor for environmental monitoring"
+  - file: "/assets/models/mechatronics/Ultrasonic Sensor v1.glb"
+    description: "Ultrasonic distance sensor for water level detection"
   - file: "/assets/models/mechatronics/pump.glb"
     description: "Submersible water pump assembly"
   - file: "/assets/models/mechatronics/DistHolder.glb"
     description: "Water distribution holder component"
+  - file: "/assets/models/mechatronics/Relay v1.glb"
+    description: "Relay module for pump control and power switching"
+  - file: "/assets/models/mechatronics/SmartWateringSystem v12.glb"
+    description: "Complete assembly of the smart watering system"
 
 # Diagrams and schematics
 diagrams:

@@ -2,7 +2,7 @@
 layout: project
 title: "Autonomous Tool Carrying Robot"
 date: 2022-01-20
-featured_image: "/assets/images/projects/rycsv/video_demo_1.gif"
+featured_image: "/assets/images/projects/rycsv/a.gif"
 description: "A fully autonomous tool carrying robot (astromech inspired) robot powered by ROS and Raspberry Pi, featuring simulation in Gazebo and real-time teleoperation."
 category: "Robotics"
 tags: [ROS, Python, Raspberry Pi, Autonomous Systems, Gazebo, Simulation]
@@ -10,6 +10,8 @@ github_url: "https://github.com/aojedao/rycsv"
 gallery:
   - file: "/assets/images/projects/rycsv/RycsvCV.gif"
     description: "Computer Vision demonstration"
+  - file: "/assets/images/projects/rycsv/a.gif"
+    description: "Image Detection Triggering Movement"
   - file: "/assets/images/projects/rycsv/RycsvSLAM.gif"
     description: "SLAM and Navigation testing"
   - file: "/assets/images/projects/rycsv/featured_r2d2.jpg"

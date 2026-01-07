@@ -28,71 +28,36 @@ gallery:
 
 plots_title: "Performance Data Analysis"
 plots:
-  - title: "End-Effector Position"
-    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+  - title: "Speed Controller - Motor Response"
+    x_file: "/assets/data/advancedmechatronics/speed-controller.csv"
     x_column: 0
     y_files:
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
+      - file: "/assets/data/advancedmechatronics/speed-controller.csv"
         column: 1
-        label: "X Position"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        label: "Left Delta"
+      - file: "/assets/data/advancedmechatronics/speed-controller.csv"
         column: 2
-        label: "Y Position"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 3
-        label: "Z Position"
-    x_label: "Time (s)"
-    y_label: "Position (m)"
-  
-  - title: "Joint Angles"
-    x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 0
-    y_files:
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 5
-        label: "Joint 1"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 6
-        label: "Joint 2"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 7
-        label: "Joint 3"
-    x_label: "Time (s)"
-    y_label: "Angle (rad)"
-  
-  - title: "Joint Velocities"
-    x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 0
-    y_files:
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 13
-        label: "Joint 1 Velocity"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 14
-        label: "Joint 2 Velocity"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 15
-        label: "Joint 3 Velocity"
-    x_label: "Time (s)"
-    y_label: "Velocity (rad/s)"
-  
-  - title: "Joint Accelerations"
-    x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 0
-    y_files:
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 21
-        label: "Joint 1 Acceleration"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 22
-        label: "Joint 2 Acceleration"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 23
-        label: "Joint 3 Acceleration"
-    x_label: "Time (s)"
-    y_label: "Acceleration (rad/s²)"
+        label: "Right Delta"
+    x_label: "Time (Unit)"
+    y_label: "Motor Response (normalized)"
 
-custom_plot: "advmech-plot-handler.html"
+  - title: "Acceleration Tests - Complete IMU Data"
+    x_file: "/assets/data/advancedmechatronics/accel-tests.csv"
+    x_column: 0
+    y_files:
+      - file: "/assets/data/advancedmechatronics/accel-tests.csv"
+        column: 3
+        label: "ax"
+      - file: "/assets/data/advancedmechatronics/accel-tests.csv"
+        column: 4
+        label: "ay"
+      - file: "/assets/data/advancedmechatronics/accel-tests.csv"
+        column: 5
+        label: "az"
+    x_label: "Sample Index"
+    y_label: "Acceleration (m/s²)"
+
+custom_plot: "universal-plot-handler.html"
 
 ---
 

@@ -1,0 +1,219 @@
+<!-- Advanced Mechatronics Plot Handler - CSV-based Plotly visualization -->
+<div id="advmech-plots-container" style="width: 100%; padding: 0; margin: 20px 0;">
+    <h3 style="font-size: 1.2rem; text-transform: uppercase; letter-spacing: 0.1em; color: var(--text-muted); border-bottom: 1px solid var(--border-color); padding-bottom: var(--spacing-sm); margin: 0 0 var(--spacing-md) 0;">{{ page.plots_title | default: "Data Visualization" }}</h3>
+    <div id="advmech-plots-grid" style="width: 100%; margin: 0; padding: 0;"></div>
+    
+    <!-- Store site baseurl for use in JavaScript -->
+    <script>
+        window.SITE_BASEURL = "{{ site.baseurl }}";
+    </script>
+    
+    <script>
+        // Parse CSV with column headers
+        function parseCSV(csvText) {
+            const lines = csvText.trim().split(/\r?\n/).filter(l => l.trim());
+            if (lines.length < 2) return { headers: [], rows: [] };
+            
+            const headers = lines[0].split(',').map(h => h.trim());
+            const rows = [];
+            
+            for (let i = 1; i < lines.length; i++) {
+                const values = lines[i].split(',').map(v => {
+                    const num = parseFloat(v.trim());
+                    return isNaN(num) ? null : num;
+                });
+                rows.push(values);
+            }
+            return { headers, rows };
+        }
+        
+        // Get column data
+        function getColumn(data, columnIndex) {
+            return data.rows.map(row => row[columnIndex]).filter(v => v !== null);
+        }
+        
+        // Add baseurl to path if needed
+        function resolvePath(path) {
+            if (window.SITE_BASEURL && !path.startsWith(window.SITE_BASEURL)) {
+                return window.SITE_BASEURL + path;
+            }
+            return path;
+        }
+        
+        // Build plot config from Jekyll
+        {% if page.plots %}
+        const plotConfigs = [
+            {% for plot in page.plots %}
+            {
+                id: "advmech-plot-{{ forloop.index0 }}",
+                title: "{{ plot.title }}",
+                xFile: "{{ plot.x_file }}",
+                xColumn: {{ plot.x_column | default: 0 }},
+                yFiles: [
+                    {% for yfile in plot.y_files %}
+                    {
+                        file: "{{ yfile.file }}",
+                        column: {{ yfile.column }},
+                        label: "{{ yfile.label }}"
+                    }
+                    {% unless forloop.last %},{% endunless %}
+                    {% endfor %}
+                ],
+                xLabel: "{{ plot.x_label }}",
+                yLabel: "{{ plot.y_label }}"
+            }
+            {% unless forloop.last %},{% endunless %}
+            {% endfor %}
+        ];
+        {% else %}
+        const plotConfigs = [];
+        {% endif %}
+        
+        const colors = ['#3b82f6', '#10b981', '#ef4444', '#f59e0b', '#8b5cf6', '#06b6d4', '#ec4899'];
+        let colorIdx = 0;
+        function getColor() { return colors[colorIdx++ % colors.length]; }
+        function resetColors() { colorIdx = 0; }
+        
+        // Load all plots
+        async function initPlots() {
+            console.log('[AdvMech Plot Handler] Initializing plots...');
+            console.log('[AdvMech Plot Handler] Number of plots:', plotConfigs.length);
+            
+            if (!plotConfigs || plotConfigs.length === 0) {
+                document.getElementById('advmech-plots-container').innerHTML = '<p style="color: #666;">No plots configured</p>';
+                return;
+            }
+            
+            if (typeof Plotly === 'undefined') {
+                document.getElementById('advmech-plots-container').innerHTML = '<p style="color: red;">Plotly not loaded</p>';
+                return;
+            }
+            
+            const grid = document.getElementById('advmech-plots-grid');
+            for (let i = 0; i < plotConfigs.length; i++) {
+                const config = plotConfigs[i];
+                console.log(`[AdvMech Plot Handler] Loading plot ${i}:`, config.title);
+                resetColors();
+                const container = document.createElement('div');
+                container.id = config.id;
+                container.style.cssText = 'width: 100%; height: 450px; margin-bottom: 30px; border: 1px solid var(--border-color); border-radius: 8px; background: var(--surface-color); position: relative;';
+                grid.appendChild(container);
+                
+                try {
+                    await renderPlot(config, container);
+                } catch (err) {
+                    console.error(`[AdvMech Plot Handler] Error on plot ${i}:`, err);
+                    container.innerHTML = '<div style="padding: 20px; color: red;">Error: ' + err.message + '</div>';
+                }
+            }
+        }
+        
+        async function renderPlot(config, container) {
+            try {
+                console.log(`[renderPlot] Starting for ${config.title}`);
+                
+                // Fetch X data
+                let xRes = await fetch(resolvePath(config.xFile));
+                if (!xRes.ok) throw new Error(`Failed to load X data (${xRes.status})`);
+                
+                const xCsvText = await xRes.text();
+                const xData_parsed = parseCSV(xCsvText);
+                let xData = getColumn(xData_parsed, config.xColumn);
+                
+                console.log(`[renderPlot] Loaded ${xData.length} X values`);
+                
+                // Fetch and parse all Y data
+                const traces = [];
+                for (const yfile of config.yFiles) {
+                    console.log(`[renderPlot] Fetching Y data from column ${yfile.column}`);
+                    let yRes = await fetch(resolvePath(yfile.file));
+                    if (!yRes.ok) throw new Error(`Failed to load Y data (${yRes.status})`);
+                    
+                    const yCsvText = await yRes.text();
+                    const yData_parsed = parseCSV(yCsvText);
+                    let yData = getColumn(yData_parsed, yfile.column);
+                    
+                    // Align lengths
+                    if (xData.length !== yData.length) {
+                        const minLen = Math.min(xData.length, yData.length);
+                        console.warn(`[renderPlot] Length mismatch X:${xData.length} Y:${yData.length}. Truncating to ${minLen}.`);
+                        xData = xData.slice(0, minLen);
+                        yData = yData.slice(0, minLen);
+                    }
+                    
+                    // Decimation for performance
+                    const MAX_POINTS = 4000;
+                    let xPlot = xData;
+                    let yPlot = yData;
+                    if (xData.length > MAX_POINTS) {
+                        const step = Math.ceil(xData.length / MAX_POINTS);
+                        xPlot = xData.filter((_, i) => i % step === 0);
+                        yPlot = yData.filter((_, i) => i % step === 0);
+                    }
+                    
+                    const color = getColor();
+                    const trace = {
+                        x: xPlot,
+                        y: yPlot,
+                        type: 'scatter',
+                        mode: 'lines',
+                        name: yfile.label,
+                        line: { color: color, width: 2 },
+                        hovertemplate: '<b>' + yfile.label + '</b><br>' +
+                                       config.xLabel + ': %{x:.6g}<br>' +
+                                       config.yLabel + ': %{y:.6g}<extra></extra>'
+                    };
+                    traces.push(trace);
+                }
+                
+                // Create layout with transparent background
+                const textColor = getComputedStyle(document.body).getPropertyValue('--text-primary').trim() || '#000000';
+                const gridColor = getComputedStyle(document.body).getPropertyValue('--border-color').trim() || 'rgba(128,128,128,0.2)';
+                
+                const layout = {
+                    title: config.title,
+                    paper_bgcolor: 'rgba(0,0,0,0)',
+                    plot_bgcolor: 'rgba(0,0,0,0)',
+                    font: { color: textColor, size: 12 },
+                    margin: { l: 70, r: 20, t: 50, b: 60 },
+                    xaxis: {
+                        title: config.xLabel,
+                        gridcolor: gridColor,
+                        zerolinecolor: gridColor
+                    },
+                    yaxis: {
+                        title: config.yLabel,
+                        gridcolor: gridColor,
+                        zerolinecolor: gridColor
+                    },
+                    hovermode: 'x unified',
+                    legend: {
+                        x: 0.02,
+                        y: 0.98,
+                        bgcolor: 'rgba(255,255,255,0.8)',
+                        bordercolor: gridColor,
+                        borderwidth: 1
+                    },
+                    responsive: true
+                };
+                
+                const plotConfig = { responsive: true, displayModeBar: false };
+                
+                Plotly.newPlot(config.id, traces, layout, plotConfig);
+                
+            } catch (err) {
+                console.error('[renderPlot] Error:', err);
+                container.innerHTML = '<div style="padding: 20px; color: #ef4444; text-align: center;">Error loading plot: ' + err.message + '</div>';
+            }
+        }
+        
+        // Initialize when Plotly is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                setTimeout(initPlots, 100);
+            });
+        } else {
+            setTimeout(initPlots, 100);
+        }
+    </script>
+</div>

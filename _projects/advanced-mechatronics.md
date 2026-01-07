@@ -27,14 +27,70 @@ gallery:
     description: "Position control feedback - visualization of autonomous navigation"
 
 visualizations:
-  - file: "/assets/images/projects/advancedmechatronics/acceleration-plot.html"
-    description: "Interactive Acceleration Data (ax, ay, az) from IMU sensor during robot operation"
-  - file: "/assets/images/projects/advancedmechatronics/gyroscope-plot.html"
-    description: "Interactive Gyroscope Data (gx, gy, gz) from IMU sensor during robot operation"
-  - file: "/assets/images/projects/advancedmechatronics/speed-controller-plot.html"
-    description: "Interactive Speed Controller Data - Left and Right wheel delta values showing motor response and synchronization"
-  - file: "/assets/images/projects/advancedmechatronics/accel-tests-plot.html"
-    description: "Interactive Acceleration Tests - Complete IMU data including wheel counts and acceleration/gyroscope readings"
+plots_title: "Performance Data Analysis"
+plots:
+  - title: "Acceleration Data (ax, ay, az)"
+    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+    x_column: 1
+    y_files:
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 1
+        label: "Acceleration X"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 2
+        label: "Acceleration Y"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 3
+        label: "Acceleration Z"
+    x_label: "Sample Index"
+    y_label: "Acceleration (m/s²)"
+  
+  - title: "Gyroscope Data (gx, gy, gz)"
+    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+    x_column: 1
+    y_files:
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 9
+        label: "Angular Velocity X"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 10
+        label: "Angular Velocity Y"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 11
+        label: "Angular Velocity Z"
+    x_label: "Sample Index"
+    y_label: "Angular Velocity (rad/s)"
+  
+  - title: "Speed Controller Data"
+    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+    x_column: 1
+    y_files:
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 5
+        label: "Left Wheel Delta"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 6
+        label: "Right Wheel Delta"
+    x_label: "Sample Index"
+    y_label: "Motor Response (normalized)"
+  
+  - title: "Acceleration Tests - Complete IMU Data"
+    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+    x_column: 1
+    y_files:
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 1
+        label: "Acceleration X"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 2
+        label: "Acceleration Y"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 3
+        label: "Acceleration Z"
+    x_label: "Sample Index"
+    y_label: "Acceleration (m/s²)"
+
+custom_plot: "advmech-plot-handler.html"
 
 ---
 

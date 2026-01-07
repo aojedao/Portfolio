@@ -9,7 +9,7 @@ github_url: "https://github.com/aojedao/AdvancedMechatronics"
 demo_url: ""
 
 models:
-  - file: "/assets/models/advancedmechatronics/CompleteSystem.gltf"
+  - file: "/assets/models/advancedmechatronics/CompleteSystem.glb"
     description: "Phase 3 - Complete Autonomous Container Handling Swarm System (ACHSS) with all integrated components and subsystems"
   - file: "/assets/models/advancedmechatronics/Pandebono.gltf"
     description: "Phase 1 (Mini Project 1) - Pandebono: Inaugural propeller-based robotic platform design"

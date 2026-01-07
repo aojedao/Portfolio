@@ -26,69 +26,71 @@ gallery:
   - file: "/assets/images/projects/advancedmechatronics/position-control.gif"
     description: "Position control feedback - visualization of autonomous navigation"
 
-visualizations:
 plots_title: "Performance Data Analysis"
 plots:
-  - title: "Acceleration Data (ax, ay, az)"
+  - title: "End-Effector Position"
     x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 1
+    x_column: 0
     y_files:
       - file: "/assets/data/plots/for/ExportCSVData.csv"
         column: 1
-        label: "Acceleration X"
+        label: "X Position"
       - file: "/assets/data/plots/for/ExportCSVData.csv"
         column: 2
-        label: "Acceleration Y"
+        label: "Y Position"
       - file: "/assets/data/plots/for/ExportCSVData.csv"
         column: 3
-        label: "Acceleration Z"
-    x_label: "Sample Index"
-    y_label: "Acceleration (m/s²)"
+        label: "Z Position"
+    x_label: "Time (s)"
+    y_label: "Position (m)"
   
-  - title: "Gyroscope Data (gx, gy, gz)"
+  - title: "Joint Angles"
     x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 1
-    y_files:
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 9
-        label: "Angular Velocity X"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 10
-        label: "Angular Velocity Y"
-      - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 11
-        label: "Angular Velocity Z"
-    x_label: "Sample Index"
-    y_label: "Angular Velocity (rad/s)"
-  
-  - title: "Speed Controller Data"
-    x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 1
+    x_column: 0
     y_files:
       - file: "/assets/data/plots/for/ExportCSVData.csv"
         column: 5
-        label: "Left Wheel Delta"
+        label: "Joint 1"
       - file: "/assets/data/plots/for/ExportCSVData.csv"
         column: 6
-        label: "Right Wheel Delta"
-    x_label: "Sample Index"
-    y_label: "Motor Response (normalized)"
+        label: "Joint 2"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 7
+        label: "Joint 3"
+    x_label: "Time (s)"
+    y_label: "Angle (rad)"
   
-  - title: "Acceleration Tests - Complete IMU Data"
+  - title: "Joint Velocities"
     x_file: "/assets/data/plots/for/ExportCSVData.csv"
-    x_column: 1
+    x_column: 0
     y_files:
       - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 1
-        label: "Acceleration X"
+        column: 13
+        label: "Joint 1 Velocity"
       - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 2
-        label: "Acceleration Y"
+        column: 14
+        label: "Joint 2 Velocity"
       - file: "/assets/data/plots/for/ExportCSVData.csv"
-        column: 3
-        label: "Acceleration Z"
-    x_label: "Sample Index"
-    y_label: "Acceleration (m/s²)"
+        column: 15
+        label: "Joint 3 Velocity"
+    x_label: "Time (s)"
+    y_label: "Velocity (rad/s)"
+  
+  - title: "Joint Accelerations"
+    x_file: "/assets/data/plots/for/ExportCSVData.csv"
+    x_column: 0
+    y_files:
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 21
+        label: "Joint 1 Acceleration"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 22
+        label: "Joint 2 Acceleration"
+      - file: "/assets/data/plots/for/ExportCSVData.csv"
+        column: 23
+        label: "Joint 3 Acceleration"
+    x_label: "Time (s)"
+    y_label: "Acceleration (rad/s²)"
 
 custom_plot: "advmech-plot-handler.html"
 

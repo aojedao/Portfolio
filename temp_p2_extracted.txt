@@ -1,0 +1,178 @@
+   
+ 
+ 
+ 
+ 
+ 
+𝑞̈ = 𝐽𝐴
+−1(𝑞)(𝑥̈𝑑 + 𝐾𝐷𝑒̇ + 𝐾𝑃𝑒 − 𝐽̇𝐴(𝑞, 𝑞̇ )𝑞̇)
+𝑞̈
+𝐽𝐴
+𝑒̇
+ 𝐽̇
+𝐾𝐷
+ 𝐾𝑃
+𝐾𝐷 = |
+60 0 0 0
+0 108 0 0
+0 0 0.6 0
+0 0 0 60
+|
+
+   
+ 
+𝐾𝑃 = |
+60 0 0 0
+0 108 0 0
+0 0 48 0
+0 0 0 100
+|
+ 
+function q_dot_dot=fcn(q,input) 
+  
+q1=q(1,1); 
+q2=q(2,1); 
+d3=q(3,1); 
+q4=q(4,1); 
+  
+a1=0.5; 
+a2=0.5; 
+ 
+J_reduced=[-a1*sin(q1)-a2*sin(q1+q2), -a2*sin(q1+q2), 0, 0; 
+    a1*cos(q1)+a2*cos(q1+q2), a2*cos(q1+q2), 0, 0; 
+    0, 0, -1, 0; 
+    0, 0, 0, 1]; 
+ 
+J_dot=[a2*sin(q1+q2),  a2*sin(q1+q2),0,0; 
+       -a2*cos(q1+q2),-a2*cos(q1+q2),0,0; 
+       0,0,0,0; 
+       0,0,0,0]; 
+  
+J_inverse=inv(J_reduced); 
+  
+q_dot_dot=J_inverse*(input); 
+  
+ 
+𝐽̇
+ 
+function output = fcn(q,q_dot) 
+  
+q1=q(1,1); 
+q2=q(2,1); 
+d3=q(3,1); 
+q4=q(4,1); 
+  
+a1=0.5; 
+a2=0.5; 
+  
+J_dot=[a2*sin(q1+q2),  a2*sin(q1+q2),0,0; 
+       -a2*cos(q1+q2),-a2*cos(q1+q2),0,0; 
+       0,0,0,0; 
+       0,0,0,0]; 
+output=J_dot*q_dot; 
+  
+ 
+
+   
+ 
+function y = fcn(q,q_dot) 
+  
+q1=q(1,1); 
+q2=q(2,1); 
+d3=q(3,1); 
+q4=q(4,1); 
+  
+a1=0.5; 
+a2=0.5; 
+J_reduced=[-a1*sin(q1)-a2*sin(q1+q2), -a2*sin(q1+q2), 0, 0; 
+    a1*cos(q1)+a2*cos(q1+q2), a2*cos(q1+q2), 0, 0; 
+    0, 0, -1, 0; 
+    0, 0, 0, 1]; 
+y=J_reduced*q_dot; 
+  
+  
+
+   
+ 
+ 
+𝑧
+𝑞̈
+𝑞̈ = 𝐽𝐴
+†(𝑥̈𝑑 + 𝐾𝐷𝑒̇ + 𝐾𝑃𝑒 − 𝐽̇𝐴(𝑞, 𝑞̇ )𝑞̇ ) + (𝐼𝑛 − 𝐽𝐴
+†𝐽̅𝐴)𝑞̈0
+
+   
+ 
+𝐽† = 𝐽𝑇(𝐽𝐽𝑇)−1
+𝑞̈0
+𝑞̈0 = 𝑘0
+𝜕𝑤(𝑞)
+𝜕𝑞
+𝑤
+𝜔(𝑞) = min
+𝑝,0
+‖𝑝(𝑞) − 𝑜‖
+𝑝(𝑞)
+𝑜
+𝑘0 
+ 
+function q_dot_dot=fcn(q,input) 
+  
+%q,Xd_dot,Ke 
+  
+q1=q(1,1); 
+q2=q(2,1); 
+d3=q(3,1); 
+q3=d3; 
+q4=q(4,1); 
+  
+a1=0.5; 
+a2=0.5; 
+J_reduced=[-a1*sin(q1)-a2*sin(q1+q2), -a2*sin(q1+q2), 0, 0; 
+    a1*cos(q1)+a2*cos(q1+q2), a2*cos(q1+q2), 0, 0; 
+    0, 0, 0, 1]; 
+  
+%For pseudo inverse 
+J_step=J_reduced*transpose(J_reduced); 
+J_cross=transpose(J_reduced)*(J_step)^-1; 
+  
+p0_center=[0.4;-0.7;0.5]; 
+R=0.2; 
+  
+xo=p0_center(1); 
+yo=p0_center(2); 
+  
+x2=a1*cos(q1)+a2*cos(q1+q2); 
+y2=a1*sin(q1)+a2*sin(q1+q2); 
+  
+k0=25e13; 
+  
+if norm([x2-xo;y2-yo;0])<R 
+    q_dot_dot_0=([x2-xo;y2-yo;0;0])*(1/norm([x2-xo;y2-yo;0;0]))*R; 
+  
+else 
+   
+ 
+  
+q_dot_dot_0=[ %Hard Coded Gradient ]; 
+end 
+  
+q_dot_dot=J_cross*(input(1:3,1))+(diag([1,1,1,1])-(J_cross*J_reduced))*k0*q_dot_dot_0; 
+  
+  
+ 
+𝑘0
+ 𝐾𝐷
+𝐾𝑃
+
+   
+ 
+𝐾𝐷
+ 𝐾𝑃
+ 𝑘0
+
+   
+ 
+ 
+ 
+

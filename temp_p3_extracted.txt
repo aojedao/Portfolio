@@ -1,0 +1,127 @@
+   
+ 
+ 
+ 
+ 
+ 
+𝑞(𝑡)=
+{
+ 
+ 
+ 
+ 
+    
+𝑞𝑖 +1
+2𝑞̈𝑐𝑡2                0≤𝑡≤𝑡𝑐
+𝑞𝑖 +𝑞̇𝑖𝑡𝑐(𝑡−𝑡𝑐
+2)        𝑡𝑐 <𝑡≤𝑡𝑓 −𝑡𝑐
+𝑞𝑓 −1
+2𝑞̈𝑐(𝑡𝑓 −𝑡)
+2
+       𝑡𝑓 −𝑡𝑐 <𝑡≤𝑡𝑓
+𝑞𝑖
+ 𝑞̇𝑖
+ 𝑞̈𝑐
+𝑡𝑐
+𝑡𝑓
+
+   
+ 
+|𝑞𝑓 −𝑞𝑖|
+𝑡𝑓
+<|𝑞̇𝑐|≤2|𝑞𝑓 −𝑞𝑖|
+𝑡𝑓
+function [T,q,dq,ddq,err] = trapez(q_i,q_f,dq_c,t_f,Ts); 
+ % trapez implentation based on the Robotics Modeling, Planning and Control guidebook for the course. 
+  T = (0:Ts:t_f)’; 
+  n = size(T,1); 
+  q = zeros(n,1); 
+  dq = zeros(n,1); 
+  ddq = zeros(n,1); 
+  err = 0; 
+  delta = q_f - q_i; 
+  dq_c = sign(delta)*abs(dq_c); 
+  
+ if (delta ~= 0) 
+ % constraint verification 
+   dq_r = abs(delta/t_f); 
+   err = (abs(dq_c) <= dq_r)|(abs(dq_c) > 2*dq_r); 
+  
+   if (err==0) 
+  
+     t_c = t_f - delta/dq_c; 
+     n1 = max(1,fix(n*t_c/t_f)); 
+     n2 = n - n1; 
+     ddq_c = dq_c/t_c; 
+     q   = [q_i + 0.5*ddq_c*T(1:n1).^2 
+            q_i + dq_c*(T(n1 + 1:n2)-0.5*t_c); 
+            q_f - 0.5*ddq_c*(T(n2 + 1:n) - t_f).^2]; 
+     dq  = [ddq_c*T(1:n1); 
+            dq_c*ones(n2 - n1,1); 
+            ddq_c*(t_f - T(n2 + 1:n))]; 
+     ddq(1:n1) = ddq_c*ones(1,n1); 
+     ddq(n2 + 1:n) = - ddq_c*ones(1,n1); 
+   end 
+ end 
+end 
+  
+  
+𝑠
+𝑝(s)=𝑝𝑖 + 𝑠
+‖𝑝𝑓 −𝑝𝑖‖(𝑝𝑓 −𝑝𝑖)
+𝑝̇(s)= 𝑠̇
+‖𝑝𝑓 −𝑝𝑖‖(𝑝𝑓 −𝑝𝑖)=𝑠̇𝑡
+𝑝̈(s)= 𝑠̈
+‖𝑝𝑓 −𝑝𝑖‖(𝑝𝑓 −𝑝𝑖)=𝑠̈𝑡
+   
+ 
+ 
+b11=Il1+ml1*l1^2 + kr1^2+Im1 + Il2 + ml2 * (a1^2 + l2^2 + 2*a1*l2*cos(q2)); 
+b12=Il2 + ml2*(l2^2 + a1*l2*cos(q2)) + kr2*Im2; 
+b21=Il2 + ml2*(l2^2 + a1*l2*cos(q2)) + kr2*Im2; 
+b22=Il2 + ml2*l2^2 + kr2^2 * Im2; 
+  
+
+   
+ 
+bp11=ml3*(a1^2 + a2^2 + 2*a1*a2*cos(q2))+Il4; 
+bp12=ml3*(a2^2 + a1*a2*cos(q2))+Il4; 
+bp21=ml3*(a2^2 + a1*a2*cos(q2))+Il4; 
+bp14=Il4; 
+bp41=Il4; 
+bp22=ml3*a2^2 + Il4; 
+bp24=Il4; 
+bp42=Il4; 
+bp33=ml3; 
+bp44=Il4; 
+  
+B=[b11+bp11,b12+bp12,0,bp14; 
+   b21+bp21,b22+bp22,0,bp24; 
+   0,       0,      bp33,0; 
+   bp41, bp42, 0, bp44]; 
+ 
+F=[kr1^2*Fm1,0,0,0; 
+   0,kr2^2*Fm2,0,0; 
+   0,0,kr3^2*Fm3,0; 
+   0,0,0,kr4^2*Fm4]; 
+  
+C=[(-ml2*a1*l2*sin(q2)-ml3*a1*a2*sin(q2)*q_dot(2)),(-ml2*a1*l2*sin(q2)-
+ml3*a1*a2*sin(q2))*(q_dot(1)+q_dot(2)),0,0; 
+    -(-ml2*a1*l2*sin(q2)-ml3*a1*a2*sin(q2))*q_dot(1),0,0,0; 
+    0,0,0,0; 
+    0,0,0,0]; 
+  
+g=[(ml1*l1+ml2*a1)*9.8*cos(q1) + ml2*l2*9.8*cos(q1+q2); 
+    ml2*l2*9.8*cos(q1+q2); 
+    ml3*9.8; 
+    0]; 
+ 
+ n=C*q_dot + F*q_dot + g; 
+ 
+taup=C*q_dot + F*q_dot + g; 
+q_dot_dot=B\(u-taup); 
+
+   
+ 
+ 
+

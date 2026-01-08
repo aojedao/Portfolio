@@ -97,44 +97,51 @@ projects:
     title: "MesoMicro"
     description: "Meso and micro scale project"
     technologies: ["materials", "microscopy", "analysis"]
-    status: "ready"
+    status: "completed"
     priority: "high"
     date_added: "2025-12-31"
     local_path: "DriveBackup(G):\\Desktop\\MesoMicro"
     notes: "All materials ready - can be added to portfolio"
 
   - id: 9
-    title: "XWings and the dron stuff"
-    description: "Drone related projects including XWings"
-    status: "not-started"
-    priority: "medium"
+    title: "XWings FPV - Drone Racing Team"
+    description: "Universidad Nacional de Colombia FPV drone racing team competing at national and international levels. Joint project by IEEE UN, CEIMTUN-RAS and AESS UN"
+    technologies: ["FPV Racing", "Drones", "Quadcopter", "Betaflight", "Robotics", "Competition"]
+    status: "in-progress"
+    priority: "high"
     date_added: "2026-01-06"
+    date_updated: "2026-01-07"
+    website_url: "https://xwings-fpv.github.io/webpage/"
+    instagram_url: "https://www.instagram.com/xwingsfpv/"
+    video_url: "https://www.youtube.com/watch?v=zehUei7lUtA"
+    md_file: "_projects/xwings-fpv.md"
+    notes: "Project structure created. Markdown file with comprehensive sections ready. Image directories created at /assets/images/projects/xwings-fpv/ and /assets/images/projects/xwings-fpv/team/. User needs to add: competition photos, team member photos, technical specifications, competition descriptions, and additional details. See README.md in image directory for guidance."
 
   - id: 10
     title: "FoR"
     description: "Fundamentals of Robotics (FoR) projects"
-    status: "not-started"
+    status: "completed"
     priority: "medium"
     date_added: "2026-01-06"
 
   - id: 11
     title: "Mechatronics"
     description: "Mechatronics course projects and labs"
-    status: "not-started"
+    status: "completed"
     priority: "medium"
     date_added: "2026-01-06"
 
   - id: 12
     title: "Advanced Mechatronics"
     description: "Advanced Mechatronics course projects"
-    status: "not-started"
+    status: "completed"
     priority: "medium"
     date_added: "2026-01-06"
 
   - id: 13
     title: "Swarm"
     description: "Swarm robotics projects"
-    status: "not-started"
+    status: "completed"
     priority: "medium"
     date_added: "2026-01-06"
 

@@ -167,11 +167,19 @@ projects:
     date_added: "2026-01-06"
 
   - id: 17
-    title: "LeRobot Hackathons"
-    description: "Projects and participation in LeRobot hackathon events"
-    status: "not-started"
-    priority: "medium"
+    title: "LeRobot Hackathons - Vision-Language-Action Models"
+    description: "Participation in LeRobot hackathons developing VLA and VLM models for SO-100 robot. Projects include shorts folding, kitchen manipulation with Moondream VLM (navigation, cleaning, fork manipulation, table cleaning), and plantain leaf cleaning"
+    technologies: ["VLA", "Vision-Language Models", "Moondream", "SO-100", "LeRobot", "PyTorch", "Robotic Manipulation", "Imitation Learning", "Computer Vision"]
+    status: "in-progress"
+    priority: "high"
     date_added: "2026-01-06"
+    date_updated: "2026-01-07"
+    md_file: "_projects/lerobot-hackathons.md"
+    hackathon_projects:
+      - "Shorts Folding with VLA"
+      - "Kitchen Manipulation with Moondream VLM"
+      - "Plantain Leaf Cleaning"
+    notes: "Project structure created. Comprehensive markdown file with three hackathon projects documented. Image directory created at /assets/images/projects/lerobot-hackathons/. User needs to add: demonstration images/videos, results and metrics, dataset links, and technical diagrams. See README.md in image directory for guidance."
 
   - id: 18
     title: "Environmental Sensor at DIMA"

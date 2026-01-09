@@ -5,6 +5,7 @@ description: "Comprehensive robotics capstone spanning two major projects: (P2) 
 date: 2023-12-15
 author: "Alejandro Ojeda Olarte"
 institution: "New York University"
+featured: false
 categories: [Robotics, Control Systems, MATLAB/Simulink, Kinematics, Dynamics, Motion Planning]
 featured_image: "/assets/images/projects/for/featured.gif"
 github_url: ""

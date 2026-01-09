@@ -3,6 +3,7 @@ layout: project
 title: "2-DOF Robotic Arm Parametric Trajectory"
 date: 2022-02-11
 featured_image: "/assets/images/projects/servos/mechanics_explorer.gif"
+featured: False
 description: "Implementation of inverse kinematics and trajectory planning for a 2-DOF planar robot arm to trace a complex geometric path, simulated in MATLAB/Simscape."
 category: "Robotics"
 tags: [MATLAB, Simscape, Inverse Kinematics, Robotics, Control Systems]

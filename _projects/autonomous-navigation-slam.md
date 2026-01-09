@@ -6,6 +6,7 @@ description: "Experimental implementation of Simultaneous Localization and Mappi
 date: 2022-02-03
 categories: [Robotics, ROS, SLAM, Autonomous Navigation]
 difficulty: Intermediate
+featured: False
 featured_image: "/assets/images/projects/practica/demo.gif"
 tags: [ROS Kinetic, Turtlebot, SLAM, Gmapping, AMCL, Python, C++]
 

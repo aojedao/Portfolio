@@ -9,6 +9,7 @@ institution: "Universidad Nacional de Colombia"
 categories: [Robotics, Mechatronics, Assistive Technology, Product Design]
 difficulty: Intermediate
 featured_image: "/assets/images/projects/ebarisbot/demo.gif"
+featured: True
 github_url: ""
 demo_url: ""
 tags: [Arduino, Mobile Robot, Fusion 360, FEA, Bluetooth, HC-06, App Inventor]

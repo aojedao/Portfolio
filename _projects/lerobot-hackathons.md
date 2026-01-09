@@ -7,6 +7,7 @@ date: 2025-06-01
 categories: [Robotics, Machine Learning, VLA, Vision-Language Models, LeRobot]
 authors: ["Alejandro Ojeda Olarte"]
 institution: "Independent Research"
+featured: true
 featured_image: "/assets/images/projects/lerobot-hackathons/LeRobotGlobal.gif"
 
 technologies:

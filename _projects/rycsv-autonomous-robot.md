@@ -5,6 +5,7 @@ date: 2022-01-20
 featured_image: "/assets/images/projects/rycsv/a.gif"
 description: "A fully autonomous tool carrying robot (astromech inspired) robot powered by ROS and Raspberry Pi, featuring simulation in Gazebo and real-time teleoperation."
 category: "Robotics"
+featured: false
 tags: [ROS, Python, Raspberry Pi, Autonomous Systems, Gazebo, Simulation]
 github_url: "https://github.com/aojedao/rycsv"
 gallery:

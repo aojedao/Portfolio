@@ -6,6 +6,7 @@ date: 2025-12-08
 categories: [Space Robotics, Autonomous Systems, Dual-Arm Manipulation, Zero-G Control, OSAM, MuJoCo Simulation, Motion Planning]
 authors: ["Alejandro Ojeda Olarte"]
 institution: "NYU - Space Robotics"
+featured: true
 featured_image: "/assets/images/projects/space-robotics/SpaceRobotics (1).gif"
 github_url: "https://github.com/aojedao/SpaceRobotics7863/tree/main"
 

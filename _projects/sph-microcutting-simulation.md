@@ -9,6 +9,7 @@ department: "Departamento de Ingeniería Mecánica y Mecatrónica"
 date: 2017-04-12
 tags: [Simulation, SPH, Micromachining, LS-DYNA,  Titanium, FEM]
 difficulty: Advanced
+featured: false
 category: computational-mechanics
 featured_image: "/assets/images/projects/sph-microcutting/simulation-1.gif"
 gallery:

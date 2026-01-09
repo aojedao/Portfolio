@@ -9,6 +9,7 @@ institution: "Universidad Nacional de Colombia"
 categories: [Control Systems, Robotics, Computer Vision, MATLAB/Simulink, Autonomous Systems]
 difficulty: Advanced
 featured_image: "/assets/images/projects/parrot-minidrone/main.gif"
+featured: false
 github_url: ""
 demo_url: ""
 tags: [MATLAB, Simulink, Drone Control, Vision Processing, System Identification, Flight Control, Image Processing]

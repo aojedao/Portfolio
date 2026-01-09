@@ -5,6 +5,7 @@ description: "Advanced Mechatronics course project: Autonomous Container Handlin
 date: 2025-05-07
 categories: [Mechatronics, Swarm Robotics, Autonomous Systems, 3D Design, CAD, Advanced Engineering]
 featured_image: "/assets/images/projects/advancedmechatronics/RobotDemoAdvMech (1).gif"
+featured: true
 github_url: "https://github.com/aojedao/AdvancedMechatronics"
 demo_url: ""
 

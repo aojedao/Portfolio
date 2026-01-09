@@ -8,6 +8,7 @@ categories: [UX Design, Mobile App, Urban Mobility, IoT, UI Design]
 authors: ["Pilar Monroy", "Jan Caroline Montaño Guerra", "Alejandro Ojeda", "David Sarmiento"]
 institution: "Universidad Nacional de Colombia"
 course: "Taller Bogotá"
+featured: false
 featured_image: "/assets/images/projects/taller-bogota/app-demo-1.gif"
 
 gallery:

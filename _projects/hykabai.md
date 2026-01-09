@@ -8,6 +8,7 @@ author: "Alejandro Ojeda Olarte"
 institution: "Microfactory Lab"
 categories: [Robotics, Autonomous Systems, Machine Learning, Computer Vision, Control Systems]
 difficulty: Advanced
+featured: true
 featured_image: "/assets/images/projects/hykabai/Cuadrado.gif"
 github_url: ""
 demo_url: ""

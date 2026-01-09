@@ -10,6 +10,7 @@ categories: [CNC, Manufacturing, Precision Engineering, Automation]
 difficulty: Advanced
 featured_image: "/assets/images/projects/pcb-mill/main.gif"
 github_url: ""
+featured: true
 demo_url: ""
 tags: [CNC, GRBL, Arduino, Stepper Motors, CAD, g-code, Precision Machining]
 

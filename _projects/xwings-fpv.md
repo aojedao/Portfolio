@@ -9,6 +9,7 @@ authors: ["Alejandro Ojeda Olarte", "Dylan Ortiz", "Camilo Acuña", "Juan Pablo 
 institution: "Universidad Nacional de Colombia"
 organization: ["IEEE UN", "CEIMTUN-RAS", "AESS UN"]
 founded: "April 2019"
+featured: true
 featured_image: "/assets/images/projects/xwings-fpv/ytVideo.gif"
 
 website_url: "https://xwings-fpv.github.io/webpage/"

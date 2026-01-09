@@ -32,8 +32,11 @@ layout: default
     </div>
     
     <div class="projects-grid-featured">
-      {% assign sorted_projects = site.projects | sort: "date" | reverse %}
-      {% for project in sorted_projects limit: 9 %}
+      {% assign featured_projects = site.projects | where: "featured", true | sort: "date" | reverse %}
+      {% assign all_projects = site.projects | sort: "date" | reverse %}
+      {% assign combined_projects = featured_projects | concat: all_projects %}
+      {% assign unique_projects = combined_projects | uniq %}
+      {% for project in unique_projects limit: 9 %}
         <div class="project-card-featured">
           <div class="project-media">
             {% if project.featured_image %}

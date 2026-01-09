@@ -7,7 +7,7 @@ categories: [Space Robotics, Autonomous Systems, Dual-Arm Manipulation, Zero-G C
 authors: ["Alejandro Ojeda Olarte"]
 institution: "NYU - Space Robotics"
 featured_image: "/assets/images/projects/space-robotics/SpaceRobotics (1).gif"
-github_url: ""
+github_url: "https://github.com/aojedao/SpaceRobotics7863/tree/main"
 
 technologies:
   - MuJoCo Physics Engine
@@ -23,17 +23,15 @@ models: []
 
 gallery:
   - file: "/assets/images/projects/space-robotics/Picture1.png"
-    description: "Step-by-step motion sequence - One arm anchored to ISS handles while approaching next waypoint"
-  - file: "/assets/images/projects/space-robotics/Picture2.png"
     description: "Simulation environment - Dual-arm robot performing wall-to-ceiling transition in MuJoCo"
-  - file: "/assets/images/projects/space-robotics/Picture3.png"
+  - file: "/assets/images/projects/space-robotics/Picture2.png"
     description: "Performance data - Base attitude error with and without torque compensation"
-  - file: "/assets/images/projects/space-robotics/Picture7.gif"
-    description: "Robotic manipulation demonstration in zero-gravity simulation"
+  - file: "/assets/images/projects/space-robotics/Picture3.png"
+    description: "Step-by-step motion sequence - One arm anchored to ISS handles while approaching next waypoint"
   - file: "/assets/images/projects/space-robotics/SpaceRobotics.gif"
     description: "Full mission demonstration - Navigation and screw extraction task"
-  - file: "/assets/images/projects/space-robotics/SpaceRobotics (1).gif"
-    description: "Complete dual-arm system in action - Wall crawling and manipulation"
+  - file: "/assets/images/projects/space-robotics/ezgif-496f20b11beee9.gif"
+    description: "Robotic manipulation demonstration in zero-gravity simulation"
 
 ---
 

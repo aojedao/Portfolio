@@ -6,7 +6,7 @@ baseurl: "/Portfolio"
 author: "Alejandro Ojeda Olarte"
 email: "aojedao@unal.edu.co"
 github_username: "aojedao"
-linkedin_username: "https://www.linkedin.com/in/alejandro-ojeda-olarte"
+linkedin_username: "alejandro-ojeda-olarte"
 
 # Build settings
 markdown: kramdown

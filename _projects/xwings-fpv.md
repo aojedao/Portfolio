@@ -12,6 +12,7 @@ founded: "April 2019"
 featured: true
 featured_image: "/assets/images/projects/xwings-fpv/ytVideo.gif"
 
+demo_url: "https://xwings-fpv.github.io/webpage/"
 website_url: "https://xwings-fpv.github.io/webpage/"
 instagram_url: "https://www.instagram.com/xwingsfpv/"
 email: "xwingsfpv@gmail.com"

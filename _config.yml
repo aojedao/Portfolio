@@ -7,6 +7,7 @@ author: "Alejandro Ojeda Olarte"
 email: "aojedao@unal.edu.co"
 github_username: "aojedao"
 linkedin_username: "alejandro-ojeda-olarte"
+google_analytics: "G-BFMFMJSJBD" # Add your Google Analytics tracking ID here (e.g. G-XXXXXXXXXX)
 
 # Build settings
 markdown: kramdown
